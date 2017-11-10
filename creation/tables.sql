@@ -8,7 +8,7 @@ create table clients(
 
     constraint clients_pk primary key (id)
 );
-
+/
 create table positions(
     id int not null,
     name varchar(50) not null,
@@ -16,7 +16,7 @@ create table positions(
     
     constraint positions_pk primary key (id)
 );
-
+/
 create table qualifications(
     id int not null,
     name varchar(50) not null,
@@ -26,7 +26,7 @@ create table qualifications(
     constraint qualifications_pk primary key (id)
 )nested table rendered_services store as nested_rendered_services;
 alter table nested_rendered_services add constraint unique_nested_services_id unique(id);
-
+/
 --insert into positions (name) values ('Демон - парикмахер');
 --select * from positions;
 
@@ -49,7 +49,7 @@ create table workers(
 --alter table workers modify qualification int not null;
 --alter table workers add constraint workers_qualification_fk foreign key(qualification) references qualifications(id);
 
-
+/
 create table contacts(
     id int not null,
     person_id int not null,
@@ -58,9 +58,9 @@ create table contacts(
     contact varchar(20) not null,
 
     constraint contacts_pk primary key (id),
-    constraint person_id_clients_workers_fk check(is_person_id_valid(person_status));
+    constraint person_id_clients_workers_fk;
 );
-
+/
 create table services(
     id int not null,
     name varchar(20) not null,
@@ -71,7 +71,7 @@ create table services(
     constraint services_pk primary key (id)
 );
 --alter table services add avg_duration int;
-
+/
 create table requests(
     id int not null,
     visit_date_time timestamp not null,
@@ -87,6 +87,7 @@ create table requests(
     constraint requests_clients_fk foreign key(client_id) references clients(id),
     constraint requests_services_fk foreign key(service_id) references services(id)
 )nested table holdings store as nested_holdings;
+/
 --select * from requests;
 alter table requests add holdings holdings_table__ nested table holdings store as nested_holdings;
 
@@ -98,7 +99,7 @@ create table holdings(
     
     constraint holdings_pk primary key (id)
 );
-
+/
 create table salaries(
     id int not null,
     worker_id int not null,
@@ -110,7 +111,7 @@ create table salaries(
     constraint salaries_workers_fk foreign key(worker_id) references workers(id),
     constraint salaries_workers_unique unique(worker_id)
 );
-
+/
 create table premiums_sizes(
     id int not null,
     name varchar(20) not null,
@@ -120,7 +121,7 @@ create table premiums_sizes(
     
     constraint premiums_sizes_pk primary key(id)
 );
-
+/
 create table premiums(
     id int not null,
     premium_id int not null,
@@ -133,7 +134,7 @@ create table premiums(
     constraint premiums_workers_fk foreign key(worker_id) references workers(id),
     constraint premiums_premiums_sizes_fk foreign key(premium_id) references premiums_sizes(id)
 );
-
+/
 create table accounts(
     id int not null,
     person_id int not null,
@@ -144,7 +145,7 @@ create table accounts(
     
     constraint accounts_pk primary key(id)
 );
-
+/
 create table workers_states(
     id int not null,
     name varchar(20) not null,
@@ -154,7 +155,7 @@ create table workers_states(
 );
 --alter table workers_statuses rename to workers_states;
 --select * from workers_states;
-
+/
 create table workers_date_states(
     id int not null,
     worker_id int not null,

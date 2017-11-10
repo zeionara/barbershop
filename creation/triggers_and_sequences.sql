@@ -8,7 +8,7 @@ begin
   into   :new.id
   from   dual;
 end;
-
+/
 create sequence workers_id_seq START WITH 1;
 
 create or replace trigger workers_id_bir 
@@ -19,7 +19,7 @@ begin
   into   :new.id
   from   dual;
 end;
-
+/
 create sequence clients_id_seq START WITH 1;
 
 create or replace trigger clients_id_bir 
@@ -30,7 +30,7 @@ begin
   into   :new.id
   from   dual;
 end;
-
+/
 create sequence contacts_id_seq START WITH 1;
 
 create or replace trigger contacts_id_bir 
@@ -41,7 +41,7 @@ begin
   into   :new.id
   from   dual;
 end;
-
+/
 create sequence services_id_seq START WITH 1;
 
 create or replace trigger services_id_bir 
@@ -52,7 +52,7 @@ begin
   into   :new.id
   from   dual;
 end;
-
+/
 create sequence requests_id_seq START WITH 1;
 
 create or replace trigger requests_id_bir 
@@ -63,7 +63,7 @@ begin
   into   :new.id
   from   dual;
 end;
-
+/
 create sequence holdings_id_seq START WITH 1;
 
 create or replace trigger holdings_id_bir 
@@ -74,7 +74,7 @@ begin
   into   :new.id
   from   dual;
 end;
-
+/
 create sequence salaries_id_seq START WITH 1;
 
 create or replace trigger salaries_id_bir 
@@ -85,7 +85,7 @@ begin
   into   :new.id
   from   dual;
 end;
-
+/
 create sequence premiums_sizes_id_seq START WITH 1;
 
 create or replace trigger premiums_sizes_id_bir 
@@ -96,7 +96,7 @@ begin
   into   :new.id
   from   dual;
 end;
-
+/
 create sequence premiums_id_seq START WITH 1;
 
 create or replace trigger premiums_id_bir 
@@ -107,7 +107,7 @@ begin
   into   :new.id
   from   dual;
 end;
-
+/
 create sequence workers_statuses_id_seq START WITH 1;
 
 create or replace trigger workers_statuses_id_bir 
@@ -118,7 +118,7 @@ begin
   into   :new.id
   from   dual;
 end;
-
+/
 create sequence accounts_id_seq START WITH 1;
 
 create or replace trigger accounts_id_bir 
@@ -129,7 +129,7 @@ begin
   into   :new.id
   from   dual;
 end;
-
+/
 create sequence workers_date_states_id_seq START WITH 1;
 
 create or replace trigger workers_date_states_id_bir 
@@ -140,7 +140,7 @@ begin
   into   :new.id
   from   dual;
 end;
-
+/
 create sequence positions_id_seq START WITH 1;
 
 create or replace trigger positions_id_bir 
@@ -151,7 +151,7 @@ begin
   into   :new.id
   from   dual;
 end;
-
+/
 create sequence qualifications_id_seq START WITH 1;
 
 create or replace trigger qualifications_id_bir 
@@ -162,7 +162,7 @@ begin
   into   :new.id
   from   dual;
 end;
-
+/
 CREATE OR REPLACE TRIGGER contacts_before_insert
 BEFORE INSERT
    ON contacts
@@ -185,7 +185,7 @@ BEGIN
     end if;
     
 END;
-
+/
 create or replace trigger accounts_before_insert
 before insert
    on accounts
@@ -198,7 +198,7 @@ begin
     end;
     end if;
 end;
-
+/
 create or replace trigger requests_before_insert
 before insert
    on requests
@@ -211,7 +211,7 @@ begin
     end;
     end if;
 end;
-
+/
 create or replace trigger premiums_before_insert
 before insert
    on premiums
@@ -224,7 +224,7 @@ begin
     end;
     end if;
 end;
-
+/
 create or replace trigger wds_before_insert_update
 before insert or update
    on workers_date_states
