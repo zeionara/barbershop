@@ -144,6 +144,7 @@ create table accounts(
     
     constraint accounts_pk primary key(id)
 );
+select * from accounts;
 
 create table workers_states(
     id int not null,
@@ -154,6 +155,7 @@ create table workers_states(
 );
 --alter table workers_statuses rename to workers_states;
 --select * from workers_states;
+select * from workers;
 
 create table workers_date_states(
     id int not null,

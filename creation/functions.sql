@@ -103,6 +103,7 @@ end;
 
 select * from requests;
 */
+select is_premium_valid(1,1) from dual;
 
 CREATE OR REPLACE FUNCTION is_premium_valid(premium_size numeric, premium_id int) RETURN boolean is
 cnt number;
@@ -154,6 +155,7 @@ begin
     vv := is_master_unbusy(to_timestamp ('11-07-2003 13:30', 'DD-MM-RR HH24:MI'), 2, 2);
     if vv then dbms_output.put_line('Master is unbusy:');
     end if;
+    return 11;
 end;
 
 select * from requests;
