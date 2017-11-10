@@ -50,3 +50,5 @@ select * from services;
 select table_name, nested from all_tables where nested like 'YES';
 insert into qualifications (name, rendered_services) values ('цирюльник',services_table__(new_service(1),new_service(2)));
 select * from table(select rendered_services from qualifications where id = (select qualification from workers where id = 2));
+
+select id, person_id, person_status, login, passwd, dbms_lob.getlength(avatar) size_of_avatar_in_bytes from accounts;

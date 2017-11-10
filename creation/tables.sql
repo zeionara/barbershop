@@ -145,7 +145,12 @@ create table accounts(
     
     constraint accounts_pk primary key(id)
 );
+<<<<<<< HEAD
 /
+=======
+select * from accounts;
+
+>>>>>>> 0ebf464991708dd40493d22f14e173e2baee28c1
 create table workers_states(
     id int not null,
     name varchar(20) not null,
@@ -155,7 +160,12 @@ create table workers_states(
 );
 --alter table workers_statuses rename to workers_states;
 --select * from workers_states;
+<<<<<<< HEAD
 /
+=======
+select * from workers;
+
+>>>>>>> 0ebf464991708dd40493d22f14e173e2baee28c1
 create table workers_date_states(
     id int not null,
     worker_id int not null,
