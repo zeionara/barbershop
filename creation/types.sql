@@ -1,4 +1,32 @@
-create or replace type worker_status_type as object(
+create or replace type day_state__ as object (
+    date_ date,
+    state_code int
+);
+
+create or replace type day_state_table__ as table of day_state__;
+
+create or replace type day_states__ as object (
+    day_state_table day_state_table__,
+    member function get_state(required_date date) return int
+);
+
+create or replace type body day_states__ as 
+    member function get_state(required_date date) return int is 
+    state_ int;
+    begin 
+        for i in day_state_table.first .. day_state_table.last loop
+            if (day_state_table(i).date_ = required_date) then
+                state_ := day_state_table(i).state_code;
+                exit;
+            end if;
+        end loop;
+        if state_ is null then state_ := 0;
+        end if;
+        return state_; 
+    end get_state; 
+end;
+
+/*create or replace type worker_status_type as object(
     the_date date,
     status_code int
 );
@@ -33,3 +61,4 @@ worker_status_type(to_date('10-02-02','DD-MM-RR'), 2);
 
 select user from dual;
 create directory image_dir as '/home/s207602/himgs';
+*/

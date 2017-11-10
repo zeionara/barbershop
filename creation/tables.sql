@@ -115,10 +115,23 @@ create table accounts(
 );
     
 
-create table workers_statuses(
+create table workers_states(
     id int not null,
     name varchar(20) not null,
     description varchar(100),
     
     constraint workers_statuses_pk primary key(id)
 );
+--alter table workers_statuses rename to workers_states;
+--select * from workers_states;
+
+create table workers_date_states(
+    id int not null,
+    worker_id int not null,
+    states day_states__,
+    
+    constraint workers_date_states_pk primary key(id),
+    constraint workers_date_states_workers_fk foreign key(worker_id) references workers(id)
+)nested table states.day_state_table store as nested_states;
+
+--drop table workers_date_states;

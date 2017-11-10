@@ -92,3 +92,34 @@ BEGIN
     select max into max_p from premiums_sizes where id = premium_id;
     return (premium_size > min_p) and (premium_size < max_p);
 END;
+
+CREATE OR REPLACE FUNCTION is_states_valid(states day_states__) RETURN boolean is
+cnt int;
+day_state_table day_state_table__;
+BEGIN
+    day_state_table := states.day_state_table;
+    for i in day_state_table.first .. day_state_table.last loop
+        select count(*) into cnt from workers_states where id = day_state_table(i).state_code;
+        if (cnt = 0) then
+            return false;
+        end if;
+    end loop;
+    for i in day_state_table.first .. day_state_table.last loop
+        for j in day_state_table.first .. day_state_table.last loop
+            if ((day_state_table(i).date_ = day_state_table(j).date_) and (i <> j)) then
+                return false;
+            end if;
+        end loop;
+    end loop;
+    return true;
+END;
+
+declare
+vv boolean;
+begin
+    vv := is_states_valid(day_states__(day_state_table__(day_state__(TO_DATE('2003/07/09', 'yyyy/mm/dd'), 1),
+                                                 day_state__(TO_DATE('2003/07/10', 'yyyy/mm/dd'), 2))));
+    if vv then dbms_output.put_line('States are valid');
+    else dbms_output.put_line('States are invalid');
+    end if;
+end;

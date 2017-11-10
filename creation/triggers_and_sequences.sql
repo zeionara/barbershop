@@ -130,6 +130,17 @@ begin
   from   dual;
 end;
 
+create sequence workers_date_states_id_seq START WITH 1;
+
+create or replace trigger workers_date_states_id_bir 
+before insert on workers_date_states 
+for each row
+begin
+  select workers_date_states_id_seq.nextval
+  into   :new.id
+  from   dual;
+end;
+
 CREATE OR REPLACE TRIGGER contacts_before_insert
 BEFORE INSERT
    ON contacts
@@ -187,6 +198,19 @@ begin
     if (not is_premium_valid(:new.premium_size,:new.premium_id)) then 
     begin
         raise_application_error(-20101, 'The premium is appointed unfairly');
+        rollback;
+    end;
+    end if;
+end;
+
+create or replace trigger wds_before_insert
+before insert
+   on workers_date_states
+   for each row
+begin
+    if (not is_states_valid(:new.states)) then 
+    begin
+        raise_application_error(-20101, 'The states are invalid');
         rollback;
     end;
     end if;

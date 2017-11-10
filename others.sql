@@ -38,3 +38,7 @@ SELECT TO_TIMESTAMP ('10-09-02 14:10:10.123000', 'DD-MM-RR HH24:MI:SS.FF')
 drop table clients;
 select * from clients;
 select * from workers;
+
+insert into workers_date_states (worker_id, states) values (2, day_states__(day_state_table__(day_state__(TO_DATE('2003/07/09', 'yyyy/mm/dd'), 1),
+                                                 day_state__(TO_DATE('2003/07/10', 'yyyy/mm/dd'), 2))));
+select * from workers_date_states;
