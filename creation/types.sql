@@ -26,6 +26,19 @@ create or replace type body day_states__ as
     end get_state; 
 end;
 
+create or replace type holding__ as object (
+    id int,
+    quantity int
+);
+
+create or replace type holdings_table__ as table of holding__;
+
+create or replace type service__ as object (
+    id int
+);
+
+create or replace type services_table__ as table of service__;
+
 /*create or replace type worker_status_type as object(
     the_date date,
     status_code int

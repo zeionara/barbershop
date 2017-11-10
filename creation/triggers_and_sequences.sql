@@ -141,6 +141,28 @@ begin
   from   dual;
 end;
 
+create sequence positions_id_seq START WITH 1;
+
+create or replace trigger positions_id_bir 
+before insert on positions 
+for each row
+begin
+  select positions_id_seq.nextval
+  into   :new.id
+  from   dual;
+end;
+
+create sequence qualifications_id_seq START WITH 1;
+
+create or replace trigger qualifications_id_bir 
+before insert on qualifications 
+for each row
+begin
+  select qualifications_id_seq.nextval
+  into   :new.id
+  from   dual;
+end;
+
 CREATE OR REPLACE TRIGGER contacts_before_insert
 BEFORE INSERT
    ON contacts
@@ -203,11 +225,12 @@ begin
     end if;
 end;
 
-create or replace trigger wds_before_insert
-before insert
+create or replace trigger wds_before_insert_update
+before insert or update
    on workers_date_states
    for each row
 begin
+    dbms_output.put_line('okk');
     if (not is_states_valid(:new.states)) then 
     begin
         raise_application_error(-20101, 'The states are invalid');

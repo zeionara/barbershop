@@ -18,11 +18,32 @@ BEGIN
 END;
 
 CREATE OR REPLACE FUNCTION is_master_unbusy(requested_date_time_begin timestamp, service_id int, master_id int) RETURN boolean is
+cnt int;
+state_ int;
 pattern_ varchar(100);
 service_duration int;
 intersection_degree int;
 requested_date_time_end timestamp;
 BEGIN
+    --check if a master works in that day
+    begin
+        select state_code into state_ 
+        from table(select treat(states as day_states__).day_state_table from workers_date_states where worker_id = master_id)
+        where date_ = trunc(cast(requested_date_time_begin as date));
+    exception
+      WHEN NO_DATA_FOUND THEN
+        state_ := null;
+    END;
+    if (state_ <> 1) and (state_ is not null) then
+        return false;
+    end if;
+    --check if time can provide this service
+    select count(*) into cnt
+    from table(select rendered_services from qualifications where id = (select qualification from workers where id = master_id))
+    where id = service_id;
+    if (cnt = 0) then
+        return false;
+    end if;
     --get time of end serving
     select avg_duration into service_duration from services where id = service_id;
     if service_duration is null then service_duration := 60;
@@ -114,12 +135,74 @@ BEGIN
     return true;
 END;
 
+set serveroutput on;
 declare
 vv boolean;
+dst day_state__;
+hlt holding__;
+svt service__;
 begin
+    /*dst := new_day_state(TO_DATE('2003/07/09', 'yyyy/mm/dd'), 1);
+    hlt := new_holding(1,20);
     vv := is_states_valid(day_states__(day_state_table__(day_state__(TO_DATE('2003/07/09', 'yyyy/mm/dd'), 1),
                                                  day_state__(TO_DATE('2003/07/10', 'yyyy/mm/dd'), 2))));
     if vv then dbms_output.put_line('States are valid');
     else dbms_output.put_line('States are invalid');
     end if;
+    */
+    --svt := new_service(1);
+    vv := is_master_unbusy(to_timestamp ('11-07-2003 13:30', 'DD-MM-RR HH24:MI'), 2, 2);
+    if vv then dbms_output.put_line('Master is unbusy:');
+    end if;
 end;
+
+select * from requests;
+
+---
+---constructors
+---
+
+CREATE OR REPLACE FUNCTION new_day_state(date_ date, state_code int) RETURN day_state__ is
+cnt int;
+day_state_tmp day_state__;
+BEGIN
+    select count(*) into cnt from workers_states where id = state_code;
+    if (cnt = 0) then
+        raise_application_error(-20101, 'The state code is invalid');
+        rollback;
+    end if;
+    day_state_tmp := day_state__(date_, state_code);
+    return day_state_tmp;
+END;
+
+CREATE OR REPLACE FUNCTION new_holding(id_ int, quantity int) RETURN holding__ is
+cnt int;
+holding_tmp holding__;
+BEGIN
+    select count(*) into cnt from holdings where id = id_;
+    if (cnt = 0) then
+        raise_application_error(-20101, 'The holding id is invalid');
+        rollback;
+    end if;
+    holding_tmp := holding__(id_, quantity);
+    return holding_tmp;
+END;
+
+CREATE OR REPLACE FUNCTION new_service(id_ int) RETURN service__ is
+cnt int;
+service_tmp service__;
+BEGIN
+    select count(*) into cnt from services where id = id_;
+    if (cnt = 0) then
+        raise_application_error(-20101, 'The service id is invalid');
+        rollback;
+    end if;
+    service_tmp := service__(id_);
+    return service_tmp;
+END;
+
+select trunc(cast(to_timestamp ('09-07-2003 02:00', 'DD-MM-RR HH24:MI') as date)) - TO_DATE('2003/07/09', 'yyyy/mm/dd')  from dual;
+
+select state_code
+    from table(select treat(states as day_states__).day_state_table from workers_date_states where worker_id = 2)
+    where date_ = trunc(cast(to_timestamp ('10-07-2003 13:30', 'DD-MM-RR HH24:MI') as date));

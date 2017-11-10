@@ -39,6 +39,14 @@ drop table clients;
 select * from clients;
 select * from workers;
 
-insert into workers_date_states (worker_id, states) values (2, day_states__(day_state_table__(day_state__(TO_DATE('2003/07/09', 'yyyy/mm/dd'), 1),
-                                                 day_state__(TO_DATE('2003/07/10', 'yyyy/mm/dd'), 2))));
+insert into workers_date_states (worker_id, states) values (2, day_states__(day_state_table__(new_day_state(TO_DATE('2003/07/09', 'yyyy/mm/dd'), 1),
+                                                 new_day_state(TO_DATE('2003/07/10', 'yyyy/mm/dd'), 2))));
 select * from workers_date_states;
+--select from inner table
+select * from table(select treat(states as day_states__).day_state_table from workers_date_states where worker_id = 2);
+--insert to inner table
+delete from workers_date_states;
+select * from services;
+select table_name, nested from all_tables where nested like 'YES';
+insert into qualifications (name, rendered_services) values ('цирюльник',services_table__(new_service(1),new_service(2)));
+select * from table(select rendered_services from qualifications where id = (select qualification from workers where id = 2));

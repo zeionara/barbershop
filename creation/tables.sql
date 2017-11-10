@@ -9,6 +9,27 @@ create table clients(
     constraint clients_pk primary key (id)
 );
 
+create table positions(
+    id int not null,
+    name varchar(50) not null,
+    description varchar(200),
+    
+    constraint positions_pk primary key (id)
+);
+
+create table qualifications(
+    id int not null,
+    name varchar(50) not null,
+    description varchar(200),
+    rendered_services services_table__,
+    
+    constraint qualifications_pk primary key (id)
+)nested table rendered_services store as nested_rendered_services;
+alter table nested_rendered_services add constraint unique_nested_services_id unique(id);
+
+--insert into positions (name) values ('Демон - парикмахер');
+--select * from positions;
+
 create table workers(
     id int not null,
     name varchar(10) not null,
@@ -16,11 +37,18 @@ create table workers(
     patronymic varchar(30),
     sex char not null check(sex in ('m','f')),
     address varchar(50) not null,
-    position varchar(20) not null,
-    qualification varchar(20) not null,
+    position int not null,
+    qualification int not null,
 
-    constraint workers_pk primary key (id)
+    constraint workers_pk primary key (id),
+    constraint workers_positions_fk foreign key(position) references positions(id),
+    constraint workers_qualification_fk foreign key(qualification) references qualifications(id)
 );
+--alter table workers add qualification int;
+--update workers set qualification = 1 where id = 2;
+--alter table workers modify qualification int not null;
+--alter table workers add constraint workers_qualification_fk foreign key(qualification) references qualifications(id);
+
 
 create table contacts(
     id int not null,
@@ -52,12 +80,15 @@ create table requests(
     service_id int not null,
     note varchar(100),
     factical_durability numeric,
+    holdings holdings_table__,
     
     constraint requests_pk primary key (id),
     constraint requests_workers_fk foreign key(worker_id) references workers(id),
     constraint requests_clients_fk foreign key(client_id) references clients(id),
     constraint requests_services_fk foreign key(service_id) references services(id)
-);
+)nested table holdings store as nested_holdings;
+--select * from requests;
+alter table requests add holdings holdings_table__ nested table holdings store as nested_holdings;
 
 create table holdings(
     id int not null,
@@ -113,7 +144,6 @@ create table accounts(
     
     constraint accounts_pk primary key(id)
 );
-    
 
 create table workers_states(
     id int not null,
@@ -131,7 +161,9 @@ create table workers_date_states(
     states day_states__,
     
     constraint workers_date_states_pk primary key(id),
-    constraint workers_date_states_workers_fk foreign key(worker_id) references workers(id)
+    constraint workers_date_states_workers_fk foreign key(worker_id) references workers(id),
+    constraint wds_workers_unique unique(worker_id)
 )nested table states.day_state_table store as nested_states;
-
+alter table nested_states add constraint unique_dates unique(date_);
+--alter table workers_date_states add constraint wds_workers_unique unique(worker_id);
 --drop table workers_date_states;
