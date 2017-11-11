@@ -6,7 +6,7 @@ BEGIN
     end if;
     return cnt > 0;
 END;
-
+/
 CREATE OR REPLACE FUNCTION is_contact_valid(contact_type varchar, contact_value varchar) RETURN boolean is
 pattern_ varchar(100);
 BEGIN
@@ -16,7 +16,7 @@ BEGIN
     end if;
     return regexp_like(contact_value,pattern_);
 END;
-
+/
 CREATE OR REPLACE FUNCTION is_master_unbusy(requested_date_time_begin timestamp, service_id int, master_id int) RETURN boolean is
 cnt int;
 state_ int;
@@ -89,6 +89,7 @@ BEGIN
     );
     return intersection_degree = 0;
 END;
+/
 
 CREATE OR REPLACE FUNCTION is_premium_valid(premium_size numeric, premium_id int) RETURN boolean is
 cnt number;
@@ -99,6 +100,7 @@ BEGIN
     select max into max_p from premiums_sizes where id = premium_id;
     return (premium_size > min_p) and (premium_size < max_p);
 END;
+/
 
 --check is the set of states contains duplicated date of incorrect ids of state
 CREATE OR REPLACE FUNCTION is_states_valid(states day_states__) RETURN boolean is
@@ -121,6 +123,7 @@ BEGIN
     end loop;
     return true;
 END;
+/
 
 ---
 ---constructors
@@ -138,7 +141,7 @@ BEGIN
     day_state_tmp := day_state__(date_, state_code);
     return day_state_tmp;
 END;
-
+/
 CREATE OR REPLACE FUNCTION new_holding(id_ int, quantity int) RETURN holding__ is
 cnt int;
 holding_tmp holding__;
@@ -151,7 +154,7 @@ BEGIN
     holding_tmp := holding__(id_, quantity);
     return holding_tmp;
 END;
-
+/
 CREATE OR REPLACE FUNCTION new_service(id_ int) RETURN service__ is
 cnt int;
 service_tmp service__;
@@ -164,3 +167,4 @@ BEGIN
     service_tmp := service__(id_);
     return service_tmp;
 END;
+/
