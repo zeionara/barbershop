@@ -1,8 +1,8 @@
 
-
+drop package barbershop;
 CREATE or replace PACKAGE barbershop AS
    function get_clients_list(master_id int, date_ date) return clients_table__;
-END barbershop;
+END;
 /
 
 CREATE or replace PACKAGE BODY barbershop AS
@@ -24,20 +24,13 @@ CREATE or replace PACKAGE BODY barbershop AS
    BEGIN
         cnt := 0;
         clients := clients_table__(null);
-        --clients.extend(100);
-        delete from opop;
         FOR client_ IN clients_ LOOP
-            cc := client__(client_.name, client_.patronymic, client_.contact, client_.vdate);
+            clients(clients.count) := client__(client_.name, client_.patronymic, client_.contact, client_.vdate);
             clients.extend();
-            clients(clients.count) := cc;
-            --cnt := cnt + 1;
-            
-            insert into opop values(client__(client_.name, client_.patronymic, client_.contact, client_.vdate));
-            dbms_output.put_line('---' || client_.name);
         END LOOP;
         return clients;
    END;
-END barbershop;
+END;
 /
 select min(id) from contacts group by person_id, person_status;
 select * from contacts where id in (select min(id) from contacts group by person_id) and person_status = 'client' and type = 'phone';
@@ -52,6 +45,8 @@ set serveroutput on;
 declare
 vv boolean;
 clients clients_table__;
+client client__;
+ind int;
 begin
     --clients := clients_table__(null);
     --clients.extend(100);
@@ -59,6 +54,12 @@ begin
     --delete from opop;
     --insert into opop values (client__('a', 'a', 'a', TO_DATE('2002/11/10', 'yyyy/mm/dd')));
     clients := barbershop.get_clients_list(2, TO_DATE('2002/11/10', 'yyyy/mm/dd'));
-    dbms_output.put_line('hio');
+    for ind in clients.first .. clients.last - 1 loop
+      client := clients(ind);
+      dbms_output.put_line(client.name || ' ' || client.patronymic || ' запись на ' || to_char(client.date_,'HH24:MI') || '. Номер телефона : ' || client.phone);
+    end loop;
+    --dbms_output.put_line('-----------' || clients(1).phone);
 end;
+
 select * from opop;
+select * from requests;
