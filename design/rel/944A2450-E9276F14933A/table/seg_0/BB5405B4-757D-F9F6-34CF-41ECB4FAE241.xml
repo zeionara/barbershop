@@ -1,0 +1,135 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="BB5405B4-757D-F9F6-34CF-41ECB4FAE241" schemaObject="D258EC81-D467-77DE-C0A9-3CB97389007C" name="ACCOUNTS">
+<sourceConnName>hssh</sourceConnName>
+<sourceObjSchema>S207602</sourceObjSchema>
+<sourceObjName>ACCOUNTS</sourceObjName>
+<createdBy>Zerbs</createdBy>
+<createdTime>2017-11-11 00:26:33 UTC</createdTime>
+<ownerDesignName>design</ownerDesignName>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="ID" id="C45D22A6-77DE-2E58-3F9D-BF9CB7C08B72">
+<sourceConnName>hssh</sourceConnName>
+<sourceObjSchema>ACCOUNTS</sourceObjSchema>
+<sourceObjName>ID</sourceObjName>
+<createdBy>Zerbs</createdBy>
+<createdTime>2017-11-11 00:26:34 UTC</createdTime>
+<ownerDesignName>design</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>*</dataTypePrecision>
+<dataTypeScale>0</dataTypeScale>
+<ownDataTypeParameters>,*,0</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="PERSON_ID" id="FEB9CF64-AF6E-0CDE-3523-2A9C8CD8095E">
+<sourceConnName>hssh</sourceConnName>
+<sourceObjSchema>ACCOUNTS</sourceObjSchema>
+<sourceObjName>PERSON_ID</sourceObjName>
+<createdBy>Zerbs</createdBy>
+<createdTime>2017-11-11 00:26:34 UTC</createdTime>
+<ownerDesignName>design</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>*</dataTypePrecision>
+<dataTypeScale>0</dataTypeScale>
+<ownDataTypeParameters>,*,0</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="PERSON_STATUS" id="941BA74A-4D26-760A-E001-4CE65102E009">
+<sourceConnName>hssh</sourceConnName>
+<sourceObjSchema>ACCOUNTS</sourceObjSchema>
+<sourceObjName>PERSON_STATUS</sourceObjName>
+<createdBy>Zerbs</createdBy>
+<createdTime>2017-11-11 00:26:34 UTC</createdTime>
+<ownerDesignName>design</ownerDesignName>
+<constraintName>SYS_C00468199</constraintName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>10 BYTE</dataTypeSize>
+<listOfValues>
+<valueDef value="&apos;client&apos;" description=""/>
+<valueDef value="&apos;worker&apos;" description=""/>
+</listOfValues>
+<ownDataTypeParameters>10 BYTE,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="LOGIN" id="9ED9D03C-0D0F-207C-0C84-1F1AB5B1D375">
+<sourceConnName>hssh</sourceConnName>
+<sourceObjSchema>ACCOUNTS</sourceObjSchema>
+<sourceObjName>LOGIN</sourceObjName>
+<createdBy>Zerbs</createdBy>
+<createdTime>2017-11-11 00:26:34 UTC</createdTime>
+<ownerDesignName>design</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>20 BYTE</dataTypeSize>
+<ownDataTypeParameters>20 BYTE,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="PASSWD" id="0883F344-6E11-D47F-263B-DEDC386A109F">
+<sourceConnName>hssh</sourceConnName>
+<sourceObjSchema>ACCOUNTS</sourceObjSchema>
+<sourceObjName>PASSWD</sourceObjName>
+<createdBy>Zerbs</createdBy>
+<createdTime>2017-11-11 00:26:34 UTC</createdTime>
+<ownerDesignName>design</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>20 BYTE</dataTypeSize>
+<ownDataTypeParameters>20 BYTE,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="AVATAR" id="9BF878F7-A805-FB30-9EE7-6E98BCEB46F8">
+<sourceConnName>hssh</sourceConnName>
+<sourceObjSchema>ACCOUNTS</sourceObjSchema>
+<sourceObjName>AVATAR</sourceObjName>
+<createdBy>Zerbs</createdBy>
+<createdTime>2017-11-11 00:26:34 UTC</createdTime>
+<ownerDesignName>design</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT029</logicalDatatype>
+<dataTypeSize>4000</dataTypeSize>
+<ownDataTypeParameters>4000,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="32380F8D-6A87-93CE-2D82-87BBA80798B1" name="ACCOUNTS_PK">
+<sourceConnName>hssh</sourceConnName>
+<sourceObjSchema>S207602</sourceObjSchema>
+<sourceObjName>ACCOUNTS_PK</sourceObjName>
+<createdBy>Zerbs</createdBy>
+<createdTime>2017-11-11 00:26:34 UTC</createdTime>
+<ownerDesignName>design</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="C45D22A6-77DE-2E58-3F9D-BF9CB7C08B72"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="6D042FE2-1C22-D2F3-5462-77A3EB37B36A" schemaObject="D258EC81-D467-77DE-C0A9-3CB97389007C" name="ACCOUNTS_PK">
+<sourceConnName>hssh</sourceConnName>
+<sourceObjSchema>S207602</sourceObjSchema>
+<sourceObjName>ACCOUNTS_PK</sourceObjName>
+<createdBy>Zerbs</createdBy>
+<createdTime>2017-11-11 00:26:34 UTC</createdTime>
+<ownerDesignName>design</ownerDesignName>
+<indexState>Unique Plain Index</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="C45D22A6-77DE-2E58-3F9D-BF9CB7C08B72"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

@@ -1,0 +1,91 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<TableProxyOraclev11g class="oracle.dbtools.crest.model.design.storage.oracle.v11g.TableProxyOraclev11g" name="WORKERS" directorySegmentName="seg_0" id="D794F7C7-3FB7-90A1-AFC9-5EC352B0B1A1">
+<createdBy>Zerbs</createdBy>
+<createdTime>2017-11-11 00:26:33 UTC</createdTime>
+<ownerDesignName>design</ownerDesignName>
+<schemaObject>D258EC81-D467-77DE-C0A9-3CB97389007C</schemaObject>
+<logging>YES</logging>
+<partitionedRowMovement>DISABLE</partitionedRowMovement>
+<segment>37ABFB6B-42FF-FC00-C56B-5DD8D9112264</segment>
+<tableSpace>6175934C-97C6-647D-AEA4-C65C51295D44</tableSpace>
+<temporaryChanged>false</temporaryChanged>
+<accessDriverType>oracle_loader</accessDriverType>
+<rejectLimit></rejectLimit>
+<columnProxies itemClass="oracle.dbtools.crest.model.design.storage.oracle.v12c.ColumnProxyOraclev12c">
+<ColumnProxy name="QUALIFICATION" id="0B122E03-741E-18B8-A24A-8B49B6AEC507">
+<createdBy>Zerbs</createdBy>
+<createdTime>2017-11-11 00:26:34 UTC</createdTime>
+<ownerDesignName>design</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="PATRONYMIC" id="6FFC8A65-ED51-4726-CB17-97AD614C5FDB">
+<createdBy>Zerbs</createdBy>
+<createdTime>2017-11-11 00:26:34 UTC</createdTime>
+<ownerDesignName>design</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="ID" id="C8EC8A71-8686-F377-A58C-FA7D85400001">
+<createdBy>Zerbs</createdBy>
+<createdTime>2017-11-11 00:26:34 UTC</createdTime>
+<ownerDesignName>design</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="SEX" id="E0982BA5-1671-1F8B-8985-25348704799E">
+<createdBy>Zerbs</createdBy>
+<createdTime>2017-11-11 00:26:34 UTC</createdTime>
+<ownerDesignName>design</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="NAME" id="EDAF424F-F13D-01AF-F6F4-C385655F050C">
+<createdBy>Zerbs</createdBy>
+<createdTime>2017-11-11 00:26:34 UTC</createdTime>
+<ownerDesignName>design</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="POSITION" id="F71E0E09-C79F-7E72-CC4A-E8F6B37C4B76">
+<createdBy>Zerbs</createdBy>
+<createdTime>2017-11-11 00:26:34 UTC</createdTime>
+<ownerDesignName>design</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="SURNAME" id="FB6BA57A-0293-594C-A112-842F9CCC5495">
+<createdBy>Zerbs</createdBy>
+<createdTime>2017-11-11 00:26:34 UTC</createdTime>
+<ownerDesignName>design</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="ADDRESS" id="FD0D6FBE-7911-EEF2-9F48-0AB7D1189A13">
+<createdBy>Zerbs</createdBy>
+<createdTime>2017-11-11 00:26:34 UTC</createdTime>
+<ownerDesignName>design</ownerDesignName>
+</ColumnProxy>
+</columnProxies>
+<indexProxies>
+<IndexProxy class="oracle.dbtools.crest.model.design.storage.oracle.v10g.IndexProxyOraclev10g" name="WORKERS_PK" id="8F309E0D-1134-C5E3-798D-45DEBA7C1A5C">
+<createdBy>Zerbs</createdBy>
+<createdTime>2017-11-11 00:26:34 UTC</createdTime>
+<ownerDesignName>design</ownerDesignName>
+<schemaObject>D258EC81-D467-77DE-C0A9-3CB97389007C</schemaObject>
+<segment>3C51C357-487C-ADD4-AC52-867F0D8B839D</segment>
+<tableSpace>6175934C-97C6-647D-AEA4-C65C51295D44</tableSpace>
+</IndexProxy>
+</indexProxies>
+<foreignKeys>
+<ForeignKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.FKProxyOraclev10g" name="WORKERS_POSITIONS_FK" id="5F0ED0C4-D7B7-E97A-8660-36E8E4786CCA">
+<createdBy>Zerbs</createdBy>
+<createdTime>2017-11-11 00:26:35 UTC</createdTime>
+<ownerDesignName>design</ownerDesignName>
+</ForeignKey>
+<ForeignKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.FKProxyOraclev10g" name="WORKERS_QUALIFICATION_FK" id="F262B032-01F5-1639-EC1B-40EF711CCE63">
+<createdBy>Zerbs</createdBy>
+<createdTime>2017-11-11 00:26:35 UTC</createdTime>
+<ownerDesignName>design</ownerDesignName>
+</ForeignKey>
+</foreignKeys>
+<primaryKeys>
+<PrimaryKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.PKProxyOraclev10g" name="WORKERS_PK" id="1E45DC9B-672C-A012-E3A0-67F9E72429FB">
+<createdBy>Zerbs</createdBy>
+<createdTime>2017-11-11 00:26:35 UTC</createdTime>
+<ownerDesignName>design</ownerDesignName>
+<segment>3C51C357-487C-ADD4-AC52-867F0D8B839D</segment>
+<tableSpace>6175934C-97C6-647D-AEA4-C65C51295D44</tableSpace>
+<existingIndex>8F309E0D-1134-C5E3-798D-45DEBA7C1A5C</existingIndex>
+<indexSegment>3C51C357-487C-ADD4-AC52-867F0D8B839D</indexSegment>
+<indexSort>SORTED</indexSort>
+<usingIndex>BY INDEX NAME</usingIndex>
+</PrimaryKey>
+</primaryKeys>
+</TableProxyOraclev11g>

@@ -1,0 +1,87 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="001E5050-0D56-85EF-CE26-1DC7B299678E" schemaObject="D258EC81-D467-77DE-C0A9-3CB97389007C" name="POSITIONS">
+<sourceConnName>hssh</sourceConnName>
+<sourceObjSchema>S207602</sourceObjSchema>
+<sourceObjName>POSITIONS</sourceObjName>
+<createdBy>Zerbs</createdBy>
+<createdTime>2017-11-11 00:26:33 UTC</createdTime>
+<ownerDesignName>design</ownerDesignName>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="ID" id="7043202B-46B7-AF14-6501-32FA06D46EE9">
+<sourceConnName>hssh</sourceConnName>
+<sourceObjSchema>POSITIONS</sourceObjSchema>
+<sourceObjName>ID</sourceObjName>
+<createdBy>Zerbs</createdBy>
+<createdTime>2017-11-11 00:26:34 UTC</createdTime>
+<ownerDesignName>design</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>*</dataTypePrecision>
+<dataTypeScale>0</dataTypeScale>
+<ownDataTypeParameters>,*,0</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="NAME" id="B40AFC30-DB61-681D-326F-55C31939FFF2">
+<sourceConnName>hssh</sourceConnName>
+<sourceObjSchema>POSITIONS</sourceObjSchema>
+<sourceObjName>NAME</sourceObjName>
+<createdBy>Zerbs</createdBy>
+<createdTime>2017-11-11 00:26:34 UTC</createdTime>
+<ownerDesignName>design</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>50 BYTE</dataTypeSize>
+<ownDataTypeParameters>50 BYTE,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="DESCRIPTION" id="11C9ECB9-3F1B-57B4-E828-98174C000F0A">
+<sourceConnName>hssh</sourceConnName>
+<sourceObjSchema>POSITIONS</sourceObjSchema>
+<sourceObjName>DESCRIPTION</sourceObjName>
+<createdBy>Zerbs</createdBy>
+<createdTime>2017-11-11 00:26:34 UTC</createdTime>
+<ownerDesignName>design</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>200 BYTE</dataTypeSize>
+<ownDataTypeParameters>200 BYTE,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="8A2129CC-E710-B987-7FEA-25719FF48CA7" name="POSITIONS_PK">
+<sourceConnName>hssh</sourceConnName>
+<sourceObjSchema>S207602</sourceObjSchema>
+<sourceObjName>POSITIONS_PK</sourceObjName>
+<createdBy>Zerbs</createdBy>
+<createdTime>2017-11-11 00:26:34 UTC</createdTime>
+<ownerDesignName>design</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="7043202B-46B7-AF14-6501-32FA06D46EE9"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="D9DEB001-0EC5-024F-41D1-B737CFA64D1B" schemaObject="D258EC81-D467-77DE-C0A9-3CB97389007C" name="POSITIONS_PK">
+<sourceConnName>hssh</sourceConnName>
+<sourceObjSchema>S207602</sourceObjSchema>
+<sourceObjName>POSITIONS_PK</sourceObjName>
+<createdBy>Zerbs</createdBy>
+<createdTime>2017-11-11 00:26:34 UTC</createdTime>
+<ownerDesignName>design</ownerDesignName>
+<indexState>Unique Plain Index</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="7043202B-46B7-AF14-6501-32FA06D46EE9"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

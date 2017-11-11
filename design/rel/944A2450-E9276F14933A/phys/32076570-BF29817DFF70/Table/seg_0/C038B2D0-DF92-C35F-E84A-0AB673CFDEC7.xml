@@ -1,0 +1,64 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<TableProxyOraclev11g class="oracle.dbtools.crest.model.design.storage.oracle.v11g.TableProxyOraclev11g" name="CONTACTS" directorySegmentName="seg_0" id="C038B2D0-DF92-C35F-E84A-0AB673CFDEC7">
+<createdBy>Zerbs</createdBy>
+<createdTime>2017-11-11 00:26:33 UTC</createdTime>
+<ownerDesignName>design</ownerDesignName>
+<schemaObject>D258EC81-D467-77DE-C0A9-3CB97389007C</schemaObject>
+<logging>YES</logging>
+<partitionedRowMovement>DISABLE</partitionedRowMovement>
+<segment>37ABFB6B-42FF-FC00-C56B-5DD8D9112264</segment>
+<tableSpace>6175934C-97C6-647D-AEA4-C65C51295D44</tableSpace>
+<temporaryChanged>false</temporaryChanged>
+<accessDriverType>oracle_loader</accessDriverType>
+<rejectLimit></rejectLimit>
+<columnProxies itemClass="oracle.dbtools.crest.model.design.storage.oracle.v12c.ColumnProxyOraclev12c">
+<ColumnProxy name="PERSON_ID" id="2BE54B58-041A-D3B0-547C-3CD22A4F4143">
+<createdBy>Zerbs</createdBy>
+<createdTime>2017-11-11 00:26:34 UTC</createdTime>
+<ownerDesignName>design</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="ID" id="5C876EB4-562A-AAE0-6EE1-083C8A08B029">
+<createdBy>Zerbs</createdBy>
+<createdTime>2017-11-11 00:26:34 UTC</createdTime>
+<ownerDesignName>design</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="TYPE" id="7B704A47-6560-3996-57FA-B80B06243AE5">
+<createdBy>Zerbs</createdBy>
+<createdTime>2017-11-11 00:26:34 UTC</createdTime>
+<ownerDesignName>design</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="CONTACT" id="A6BEB948-9C3D-B053-FDC1-DDBFB575EDFD">
+<createdBy>Zerbs</createdBy>
+<createdTime>2017-11-11 00:26:34 UTC</createdTime>
+<ownerDesignName>design</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="PERSON_STATUS" id="C1FF1B6D-3061-A459-3BEB-64169A1F937E">
+<createdBy>Zerbs</createdBy>
+<createdTime>2017-11-11 00:26:34 UTC</createdTime>
+<ownerDesignName>design</ownerDesignName>
+</ColumnProxy>
+</columnProxies>
+<indexProxies>
+<IndexProxy class="oracle.dbtools.crest.model.design.storage.oracle.v10g.IndexProxyOraclev10g" name="CONTACTS_PK" id="B92310E6-0DBA-46B0-1BFF-6728E7541D0D">
+<createdBy>Zerbs</createdBy>
+<createdTime>2017-11-11 00:26:34 UTC</createdTime>
+<ownerDesignName>design</ownerDesignName>
+<schemaObject>D258EC81-D467-77DE-C0A9-3CB97389007C</schemaObject>
+<segment>3C51C357-487C-ADD4-AC52-867F0D8B839D</segment>
+<tableSpace>6175934C-97C6-647D-AEA4-C65C51295D44</tableSpace>
+</IndexProxy>
+</indexProxies>
+<primaryKeys>
+<PrimaryKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.PKProxyOraclev10g" name="CONTACTS_PK" id="116184D1-7870-5AD7-2734-0188484FA775">
+<createdBy>Zerbs</createdBy>
+<createdTime>2017-11-11 00:26:34 UTC</createdTime>
+<ownerDesignName>design</ownerDesignName>
+<segment>3C51C357-487C-ADD4-AC52-867F0D8B839D</segment>
+<tableSpace>6175934C-97C6-647D-AEA4-C65C51295D44</tableSpace>
+<existingIndex>B92310E6-0DBA-46B0-1BFF-6728E7541D0D</existingIndex>
+<indexSegment>3C51C357-487C-ADD4-AC52-867F0D8B839D</indexSegment>
+<indexSort>SORTED</indexSort>
+<usingIndex>BY INDEX NAME</usingIndex>
+</PrimaryKey>
+</primaryKeys>
+</TableProxyOraclev11g>

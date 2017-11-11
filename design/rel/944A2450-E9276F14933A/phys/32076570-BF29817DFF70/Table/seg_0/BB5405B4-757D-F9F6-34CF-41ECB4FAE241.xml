@@ -1,0 +1,81 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<TableProxyOraclev11g class="oracle.dbtools.crest.model.design.storage.oracle.v11g.TableProxyOraclev11g" name="ACCOUNTS" directorySegmentName="seg_0" id="BB5405B4-757D-F9F6-34CF-41ECB4FAE241">
+<createdBy>Zerbs</createdBy>
+<createdTime>2017-11-11 00:26:33 UTC</createdTime>
+<ownerDesignName>design</ownerDesignName>
+<schemaObject>D258EC81-D467-77DE-C0A9-3CB97389007C</schemaObject>
+<logging>YES</logging>
+<partitionedRowMovement>DISABLE</partitionedRowMovement>
+<segment>37ABFB6B-42FF-FC00-C56B-5DD8D9112264</segment>
+<tableSpace>6175934C-97C6-647D-AEA4-C65C51295D44</tableSpace>
+<temporaryChanged>false</temporaryChanged>
+<accessDriverType>oracle_loader</accessDriverType>
+<rejectLimit></rejectLimit>
+<columnProxies itemClass="oracle.dbtools.crest.model.design.storage.oracle.v12c.ColumnProxyOraclev12c">
+<ColumnProxy name="PASSWD" id="0883F344-6E11-D47F-263B-DEDC386A109F">
+<createdBy>Zerbs</createdBy>
+<createdTime>2017-11-11 00:26:34 UTC</createdTime>
+<ownerDesignName>design</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="PERSON_STATUS" id="941BA74A-4D26-760A-E001-4CE65102E009">
+<createdBy>Zerbs</createdBy>
+<createdTime>2017-11-11 00:26:34 UTC</createdTime>
+<ownerDesignName>design</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="AVATAR" id="9BF878F7-A805-FB30-9EE7-6E98BCEB46F8">
+<createdBy>Zerbs</createdBy>
+<createdTime>2017-11-11 00:26:34 UTC</createdTime>
+<ownerDesignName>design</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="LOGIN" id="9ED9D03C-0D0F-207C-0C84-1F1AB5B1D375">
+<createdBy>Zerbs</createdBy>
+<createdTime>2017-11-11 00:26:34 UTC</createdTime>
+<ownerDesignName>design</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="ID" id="C45D22A6-77DE-2E58-3F9D-BF9CB7C08B72">
+<createdBy>Zerbs</createdBy>
+<createdTime>2017-11-11 00:26:34 UTC</createdTime>
+<ownerDesignName>design</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="PERSON_ID" id="FEB9CF64-AF6E-0CDE-3523-2A9C8CD8095E">
+<createdBy>Zerbs</createdBy>
+<createdTime>2017-11-11 00:26:34 UTC</createdTime>
+<ownerDesignName>design</ownerDesignName>
+</ColumnProxy>
+</columnProxies>
+<indexProxies>
+<IndexProxy class="oracle.dbtools.crest.model.design.storage.oracle.v10g.IndexProxyOraclev10g" name="ACCOUNTS_PK" id="6D042FE2-1C22-D2F3-5462-77A3EB37B36A">
+<createdBy>Zerbs</createdBy>
+<createdTime>2017-11-11 00:26:34 UTC</createdTime>
+<ownerDesignName>design</ownerDesignName>
+<schemaObject>D258EC81-D467-77DE-C0A9-3CB97389007C</schemaObject>
+<segment>3C51C357-487C-ADD4-AC52-867F0D8B839D</segment>
+<tableSpace>6175934C-97C6-647D-AEA4-C65C51295D44</tableSpace>
+</IndexProxy>
+</indexProxies>
+<lobStorages>
+<LobStorage class="oracle.dbtools.crest.model.design.storage.oracle.v11g.LobStorageOraclev11g" name="SYS_LOB0000518221C00006$$" id="32A38C31-6B64-DEA1-2836-4E4B484832E9">
+<createdBy>Zerbs</createdBy>
+<createdTime>2017-11-11 00:26:35 UTC</createdTime>
+<ownerDesignName>design</ownerDesignName>
+<cache>NOCACHE</cache>
+<chunk>8192</chunk>
+<column>AVATAR</column>
+<logging>YES</logging>
+<tableSpace>6175934C-97C6-647D-AEA4-C65C51295D44</tableSpace>
+</LobStorage>
+</lobStorages>
+<primaryKeys>
+<PrimaryKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.PKProxyOraclev10g" name="ACCOUNTS_PK" id="32380F8D-6A87-93CE-2D82-87BBA80798B1">
+<createdBy>Zerbs</createdBy>
+<createdTime>2017-11-11 00:26:34 UTC</createdTime>
+<ownerDesignName>design</ownerDesignName>
+<segment>3C51C357-487C-ADD4-AC52-867F0D8B839D</segment>
+<tableSpace>6175934C-97C6-647D-AEA4-C65C51295D44</tableSpace>
+<existingIndex>6D042FE2-1C22-D2F3-5462-77A3EB37B36A</existingIndex>
+<indexSegment>3C51C357-487C-ADD4-AC52-867F0D8B839D</indexSegment>
+<indexSort>SORTED</indexSort>
+<usingIndex>BY INDEX NAME</usingIndex>
+</PrimaryKey>
+</primaryKeys>
+</TableProxyOraclev11g>

@@ -1,0 +1,82 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<TableProxyOraclev11g class="oracle.dbtools.crest.model.design.storage.oracle.v11g.TableProxyOraclev11g" name="WORKERS_DATE_STATES" directorySegmentName="seg_0" id="0F436477-1139-A466-AAE0-80C14DC89BB1">
+<createdBy>Zerbs</createdBy>
+<createdTime>2017-11-11 00:26:33 UTC</createdTime>
+<ownerDesignName>design</ownerDesignName>
+<schemaObject>D258EC81-D467-77DE-C0A9-3CB97389007C</schemaObject>
+<logging>YES</logging>
+<partitionedRowMovement>DISABLE</partitionedRowMovement>
+<segment>37ABFB6B-42FF-FC00-C56B-5DD8D9112264</segment>
+<tableSpace>6175934C-97C6-647D-AEA4-C65C51295D44</tableSpace>
+<temporaryChanged>false</temporaryChanged>
+<accessDriverType>oracle_loader</accessDriverType>
+<rejectLimit></rejectLimit>
+<columnProxies itemClass="oracle.dbtools.crest.model.design.storage.oracle.v12c.ColumnProxyOraclev12c">
+<ColumnProxy name="STATES" id="84D99E71-0687-9B1B-4B9D-C8508B58F62E">
+<createdBy>Zerbs</createdBy>
+<createdTime>2017-11-11 00:26:34 UTC</createdTime>
+<ownerDesignName>design</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="WORKER_ID" id="B451FCEE-A971-43DF-A910-A01ADDCA6FAD">
+<createdBy>Zerbs</createdBy>
+<createdTime>2017-11-11 00:26:34 UTC</createdTime>
+<ownerDesignName>design</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="ID" id="B9341194-B8DF-FA6B-093F-8B9E91FBFB34">
+<createdBy>Zerbs</createdBy>
+<createdTime>2017-11-11 00:26:34 UTC</createdTime>
+<ownerDesignName>design</ownerDesignName>
+</ColumnProxy>
+</columnProxies>
+<indexProxies>
+<IndexProxy class="oracle.dbtools.crest.model.design.storage.oracle.v10g.IndexProxyOraclev10g" name="WDS_WORKERS_UNIQUE" id="9AA5A8E4-5383-8B6C-E03C-8E022189966B">
+<createdBy>Zerbs</createdBy>
+<createdTime>2017-11-11 00:26:34 UTC</createdTime>
+<ownerDesignName>design</ownerDesignName>
+<schemaObject>D258EC81-D467-77DE-C0A9-3CB97389007C</schemaObject>
+<segment>3C51C357-487C-ADD4-AC52-867F0D8B839D</segment>
+<tableSpace>6175934C-97C6-647D-AEA4-C65C51295D44</tableSpace>
+</IndexProxy>
+<IndexProxy class="oracle.dbtools.crest.model.design.storage.oracle.v10g.IndexProxyOraclev10g" name="WORKERS_DATE_STATES_PK" id="AF75DE1C-4CF0-6880-282D-9729D77D3C37">
+<createdBy>Zerbs</createdBy>
+<createdTime>2017-11-11 00:26:34 UTC</createdTime>
+<ownerDesignName>design</ownerDesignName>
+<schemaObject>D258EC81-D467-77DE-C0A9-3CB97389007C</schemaObject>
+<segment>3C51C357-487C-ADD4-AC52-867F0D8B839D</segment>
+<tableSpace>6175934C-97C6-647D-AEA4-C65C51295D44</tableSpace>
+</IndexProxy>
+</indexProxies>
+<foreignKeys>
+<ForeignKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.FKProxyOraclev10g" name="WORKERS_DATE_STATES_WORKERS_FK" id="6F4AD7C5-6BCC-77C4-A06F-1BE941097C0B">
+<createdBy>Zerbs</createdBy>
+<createdTime>2017-11-11 00:26:35 UTC</createdTime>
+<ownerDesignName>design</ownerDesignName>
+</ForeignKey>
+</foreignKeys>
+<primaryKeys>
+<PrimaryKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.PKProxyOraclev10g" name="WORKERS_DATE_STATES_PK" id="E0F34257-5099-96F4-07E5-A27DECCEC8E8">
+<createdBy>Zerbs</createdBy>
+<createdTime>2017-11-11 00:26:35 UTC</createdTime>
+<ownerDesignName>design</ownerDesignName>
+<segment>3C51C357-487C-ADD4-AC52-867F0D8B839D</segment>
+<tableSpace>6175934C-97C6-647D-AEA4-C65C51295D44</tableSpace>
+<existingIndex>AF75DE1C-4CF0-6880-282D-9729D77D3C37</existingIndex>
+<indexSegment>3C51C357-487C-ADD4-AC52-867F0D8B839D</indexSegment>
+<indexSort>SORTED</indexSort>
+<usingIndex>BY INDEX NAME</usingIndex>
+</PrimaryKey>
+</primaryKeys>
+<uniqueKeys>
+<UniqueKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.UniqueOraclev10g" name="WDS_WORKERS_UNIQUE" id="24DA8B70-D9C0-BB63-3909-FD8A7A1E6EAB">
+<createdBy>Zerbs</createdBy>
+<createdTime>2017-11-11 00:26:35 UTC</createdTime>
+<ownerDesignName>design</ownerDesignName>
+<segment>3C51C357-487C-ADD4-AC52-867F0D8B839D</segment>
+<tableSpace>6175934C-97C6-647D-AEA4-C65C51295D44</tableSpace>
+<existingIndex>9AA5A8E4-5383-8B6C-E03C-8E022189966B</existingIndex>
+<indexSegment>3C51C357-487C-ADD4-AC52-867F0D8B839D</indexSegment>
+<indexSort>SORTED</indexSort>
+<usingIndex>BY INDEX NAME</usingIndex>
+</UniqueKey>
+</uniqueKeys>
+</TableProxyOraclev11g>

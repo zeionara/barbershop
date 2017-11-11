@@ -1,0 +1,14 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<TriggerOraclev10g class="oracle.dbtools.crest.model.design.storage.oracle.v10g.TriggerOraclev10g" name="WDS_BEFORE_INSERT_UPDATE" directorySegmentName="seg_0" id="55A2E24B-5F4B-F695-7DC0-8D656C7A158C">
+<sourceConnName>hssh</sourceConnName>
+<sourceObjSchema>S207602</sourceObjSchema>
+<sourceObjName>WDS_BEFORE_INSERT_UPDATE</sourceObjName>
+<createdBy>Zerbs</createdBy>
+<createdTime>2017-11-11 00:26:35 UTC</createdTime>
+<ownerDesignName>design</ownerDesignName>
+<actions>INSERT, UPDATE</actions>
+<body>begin&lt;br/&gt;    dbms_output.put_line(&apos;okk&apos;);&lt;br/&gt;    if (not is_states_valid(:new.states)) then &lt;br/&gt;    begin&lt;br/&gt;        raise_application_error(-20101, &apos;The states are invalid&apos;);&lt;br/&gt;        rollback;&lt;br/&gt;    end;&lt;br/&gt;    end if;&lt;br/&gt;end;</body>
+<triggerTime>BEFORE</triggerTime>
+<owner>EAD38B85-49B9-4BA7-8500-E52D95BBF511</owner>
+<table>0F436477-1139-A466-AAE0-80C14DC89BB1</table>
+</TriggerOraclev10g>

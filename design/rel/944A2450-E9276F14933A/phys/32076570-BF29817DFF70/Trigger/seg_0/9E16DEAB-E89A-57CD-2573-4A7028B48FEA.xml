@@ -1,0 +1,14 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<TriggerOraclev10g class="oracle.dbtools.crest.model.design.storage.oracle.v10g.TriggerOraclev10g" name="ACCOUNTS_BEFORE_INSERT" directorySegmentName="seg_0" id="9E16DEAB-E89A-57CD-2573-4A7028B48FEA">
+<sourceConnName>hssh</sourceConnName>
+<sourceObjSchema>S207602</sourceObjSchema>
+<sourceObjName>ACCOUNTS_BEFORE_INSERT</sourceObjName>
+<createdBy>Zerbs</createdBy>
+<createdTime>2017-11-11 00:26:35 UTC</createdTime>
+<ownerDesignName>design</ownerDesignName>
+<actions>INSERT</actions>
+<body>BEGIN&lt;br/&gt;    if (not is_person_id_valid(:new.person_status,:new.person_id)) then &lt;br/&gt;    begin&lt;br/&gt;        dbms_output.put_line(&apos;ddd&apos;);&lt;br/&gt;        RAISE_APPLICATION_ERROR(-20101, &apos;There is no such &apos; || :new.person_status);&lt;br/&gt;        ROLLBACK;&lt;br/&gt;    end;&lt;br/&gt;    end if;&lt;br/&gt;END;</body>
+<triggerTime>BEFORE</triggerTime>
+<owner>EAD38B85-49B9-4BA7-8500-E52D95BBF511</owner>
+<table>BB5405B4-757D-F9F6-34CF-41ECB4FAE241</table>
+</TriggerOraclev10g>

@@ -1,0 +1,14 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<TriggerOraclev10g class="oracle.dbtools.crest.model.design.storage.oracle.v10g.TriggerOraclev10g" name="REQUESTS_BEFORE_INSERT" directorySegmentName="seg_0" id="7C684C41-E6DA-6324-71CB-DF8C786F922F">
+<sourceConnName>hssh</sourceConnName>
+<sourceObjSchema>S207602</sourceObjSchema>
+<sourceObjName>REQUESTS_BEFORE_INSERT</sourceObjName>
+<createdBy>Zerbs</createdBy>
+<createdTime>2017-11-11 00:26:35 UTC</createdTime>
+<ownerDesignName>design</ownerDesignName>
+<actions>INSERT</actions>
+<body>begin&lt;br/&gt;    if (not is_master_unbusy(:new.visit_date_time,:new.service_id,:new.worker_id)) then &lt;br/&gt;    begin&lt;br/&gt;        raise_application_error(-20101, &apos;The master is busy at that time&apos;);&lt;br/&gt;        rollback;&lt;br/&gt;    end;&lt;br/&gt;    end if;&lt;br/&gt;end;</body>
+<triggerTime>BEFORE</triggerTime>
+<owner>EAD38B85-49B9-4BA7-8500-E52D95BBF511</owner>
+<table>F5E1800F-DB13-EBFF-C0BD-8AE261B1007A</table>
+</TriggerOraclev10g>

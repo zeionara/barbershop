@@ -1,0 +1,19 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<FKIndexAssociation class="oracle.dbtools.crest.model.design.relational.FKIndexAssociation" directorySegmentName="seg_0" id="040FF72F-9278-7AF3-743C-7D84CBDF073F" containerWithKeyObject="D794F7C7-3FB7-90A1-AFC9-5EC352B0B1A1" localFKIndex="F262B032-01F5-1639-EC1B-40EF711CCE63" name="WORKERS_QUALIFICATION_FK">
+<sourceConnName>hssh</sourceConnName>
+<sourceObjSchema>S207602</sourceObjSchema>
+<sourceObjName>WORKERS_QUALIFICATION_FK</sourceObjName>
+<createdBy>Zerbs</createdBy>
+<createdTime>2017-11-11 00:26:35 UTC</createdTime>
+<ownerDesignName>design</ownerDesignName>
+<referredTableLongName>S207602.QUALIFICATIONS</referredTableLongName>
+<deleteRule>NO ACTION</deleteRule>
+<referredTableID>932FF4BE-D154-D5D7-CB4E-22A0C155C9DF</referredTableID>
+<keyObject>32565E97-FCD2-B18D-9397-7A9FF99746D7</keyObject>
+<referredKeyID>32565E97-FCD2-B18D-9397-7A9FF99746D7</referredKeyID>
+<mandatory>true</mandatory>
+<refColNames>ID</refColNames>
+<transferable>true</transferable>
+<rely>false</rely>
+<columnDependencyConstraintGenerateInDDL>true</columnDependencyConstraintGenerateInDDL>
+</FKIndexAssociation>

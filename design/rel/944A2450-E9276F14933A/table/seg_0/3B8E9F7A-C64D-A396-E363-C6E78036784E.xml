@@ -1,0 +1,158 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="3B8E9F7A-C64D-A396-E363-C6E78036784E" schemaObject="D258EC81-D467-77DE-C0A9-3CB97389007C" name="PREMIUMS">
+<sourceConnName>hssh</sourceConnName>
+<sourceObjSchema>S207602</sourceObjSchema>
+<sourceObjName>PREMIUMS</sourceObjName>
+<createdBy>Zerbs</createdBy>
+<createdTime>2017-11-11 00:26:33 UTC</createdTime>
+<ownerDesignName>design</ownerDesignName>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="ID" id="FFCB9D7A-50BE-AF26-52A4-42D0E86941E3">
+<sourceConnName>hssh</sourceConnName>
+<sourceObjSchema>PREMIUMS</sourceObjSchema>
+<sourceObjName>ID</sourceObjName>
+<createdBy>Zerbs</createdBy>
+<createdTime>2017-11-11 00:26:34 UTC</createdTime>
+<ownerDesignName>design</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>*</dataTypePrecision>
+<dataTypeScale>0</dataTypeScale>
+<ownDataTypeParameters>,*,0</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="PREMIUM_ID" id="C8263997-1127-7E43-E67C-74730C7E5118">
+<sourceConnName>hssh</sourceConnName>
+<sourceObjSchema>PREMIUMS</sourceObjSchema>
+<sourceObjName>PREMIUM_ID</sourceObjName>
+<createdBy>Zerbs</createdBy>
+<createdTime>2017-11-11 00:26:34 UTC</createdTime>
+<ownerDesignName>design</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>*</dataTypePrecision>
+<dataTypeScale>0</dataTypeScale>
+<ownDataTypeParameters>,*,0</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="8E87F240-22FD-05EB-0848-DA8795AA0576" referredColumn="C9EDD0A3-161E-955D-A8FC-144F87C2F3C1"/>
+</associations>
+</Column>
+<Column name="WORKER_ID" id="FA58E135-C155-84A3-5D44-71C37A64A5B0">
+<sourceConnName>hssh</sourceConnName>
+<sourceObjSchema>PREMIUMS</sourceObjSchema>
+<sourceObjName>WORKER_ID</sourceObjName>
+<createdBy>Zerbs</createdBy>
+<createdTime>2017-11-11 00:26:34 UTC</createdTime>
+<ownerDesignName>design</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>*</dataTypePrecision>
+<dataTypeScale>0</dataTypeScale>
+<ownDataTypeParameters>,*,0</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="41FA1964-2D05-FB8D-2F2F-76555470D1B3" referredColumn="C8EC8A71-8686-F377-A58C-FA7D85400001"/>
+</associations>
+</Column>
+<Column name="EARNING_DATE" id="0602D50E-88AD-7352-32A9-05DAE7EEEDE6">
+<sourceConnName>hssh</sourceConnName>
+<sourceObjSchema>PREMIUMS</sourceObjSchema>
+<sourceObjName>EARNING_DATE</sourceObjName>
+<createdBy>Zerbs</createdBy>
+<createdTime>2017-11-11 00:26:34 UTC</createdTime>
+<ownerDesignName>design</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT007</logicalDatatype>
+<dataTypeSize>7</dataTypeSize>
+<ownDataTypeParameters>7,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="PREMIUM_SIZE" id="6E0EA217-469E-2125-ACB5-FB2680936088">
+<sourceConnName>hssh</sourceConnName>
+<sourceObjSchema>PREMIUMS</sourceObjSchema>
+<sourceObjName>PREMIUM_SIZE</sourceObjName>
+<createdBy>Zerbs</createdBy>
+<createdTime>2017-11-11 00:26:34 UTC</createdTime>
+<ownerDesignName>design</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>*</dataTypePrecision>
+<dataTypeScale>0</dataTypeScale>
+<ownDataTypeParameters>,*,0</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="NOTE" id="65569B25-5BCF-BF2C-EE83-5F00E65C5F66">
+<sourceConnName>hssh</sourceConnName>
+<sourceObjSchema>PREMIUMS</sourceObjSchema>
+<sourceObjName>NOTE</sourceObjName>
+<createdBy>Zerbs</createdBy>
+<createdTime>2017-11-11 00:26:34 UTC</createdTime>
+<ownerDesignName>design</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>150 BYTE</dataTypeSize>
+<ownDataTypeParameters>150 BYTE,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="8F1E2366-D86B-4AE8-F9E6-841A479E6F6E" name="PREMIUMS_PK">
+<sourceConnName>hssh</sourceConnName>
+<sourceObjSchema>S207602</sourceObjSchema>
+<sourceObjName>PREMIUMS_PK</sourceObjName>
+<createdBy>Zerbs</createdBy>
+<createdTime>2017-11-11 00:26:34 UTC</createdTime>
+<ownerDesignName>design</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="FFCB9D7A-50BE-AF26-52A4-42D0E86941E3"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="7FE5984B-9645-6302-AFFD-7E3455A257CF" schemaObject="D258EC81-D467-77DE-C0A9-3CB97389007C" name="PREMIUMS_PK">
+<sourceConnName>hssh</sourceConnName>
+<sourceObjSchema>S207602</sourceObjSchema>
+<sourceObjName>PREMIUMS_PK</sourceObjName>
+<createdBy>Zerbs</createdBy>
+<createdTime>2017-11-11 00:26:34 UTC</createdTime>
+<ownerDesignName>design</ownerDesignName>
+<indexState>Unique Plain Index</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="FFCB9D7A-50BE-AF26-52A4-42D0E86941E3"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="2C7D3DAC-E53B-F777-7735-351DF3CB42F6" name="PREMIUMS_PREMIUMS_SIZES_FK">
+<createdBy>Zerbs</createdBy>
+<createdTime>2017-11-11 00:26:35 UTC</createdTime>
+<ownerDesignName>design</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="C8263997-1127-7E43-E67C-74730C7E5118"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="83AD3D11-4534-E402-7B79-B67F4363B339" name="PREMIUMS_WORKERS_FK">
+<createdBy>Zerbs</createdBy>
+<createdTime>2017-11-11 00:26:35 UTC</createdTime>
+<ownerDesignName>design</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="FA58E135-C155-84A3-5D44-71C37A64A5B0"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

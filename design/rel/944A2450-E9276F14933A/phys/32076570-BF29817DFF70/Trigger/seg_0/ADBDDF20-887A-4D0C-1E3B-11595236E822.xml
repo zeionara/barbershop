@@ -1,0 +1,14 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<TriggerOraclev10g class="oracle.dbtools.crest.model.design.storage.oracle.v10g.TriggerOraclev10g" name="PREMIUMS_BEFORE_INSERT" directorySegmentName="seg_0" id="ADBDDF20-887A-4D0C-1E3B-11595236E822">
+<sourceConnName>hssh</sourceConnName>
+<sourceObjSchema>S207602</sourceObjSchema>
+<sourceObjName>PREMIUMS_BEFORE_INSERT</sourceObjName>
+<createdBy>Zerbs</createdBy>
+<createdTime>2017-11-11 00:26:35 UTC</createdTime>
+<ownerDesignName>design</ownerDesignName>
+<actions>INSERT</actions>
+<body>begin&lt;br/&gt;    if (not is_premium_valid(:new.premium_size,:new.premium_id)) then &lt;br/&gt;    begin&lt;br/&gt;        raise_application_error(-20101, &apos;The premium is appointed unfairly&apos;);&lt;br/&gt;        rollback;&lt;br/&gt;    end;&lt;br/&gt;    end if;&lt;br/&gt;end;</body>
+<triggerTime>BEFORE</triggerTime>
+<owner>EAD38B85-49B9-4BA7-8500-E52D95BBF511</owner>
+<table>3B8E9F7A-C64D-A396-E363-C6E78036784E</table>
+</TriggerOraclev10g>

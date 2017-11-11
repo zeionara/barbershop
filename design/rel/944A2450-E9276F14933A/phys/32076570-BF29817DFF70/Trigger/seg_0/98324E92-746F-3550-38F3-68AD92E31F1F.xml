@@ -1,0 +1,14 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<TriggerOraclev10g class="oracle.dbtools.crest.model.design.storage.oracle.v10g.TriggerOraclev10g" name="WORKERS_STATUSES_ID_BIR" directorySegmentName="seg_0" id="98324E92-746F-3550-38F3-68AD92E31F1F">
+<sourceConnName>hssh</sourceConnName>
+<sourceObjSchema>S207602</sourceObjSchema>
+<sourceObjName>WORKERS_STATUSES_ID_BIR</sourceObjName>
+<createdBy>Zerbs</createdBy>
+<createdTime>2017-11-11 00:26:35 UTC</createdTime>
+<ownerDesignName>design</ownerDesignName>
+<actions>INSERT</actions>
+<body>begin&lt;br/&gt;  select workers_statuses_id_seq.nextval&lt;br/&gt;  into   :new.id&lt;br/&gt;  from   dual;&lt;br/&gt;end;</body>
+<triggerTime>BEFORE</triggerTime>
+<owner>EAD38B85-49B9-4BA7-8500-E52D95BBF511</owner>
+<table>A7954892-00AA-967F-1475-363FEBFAC264</table>
+</TriggerOraclev10g>
