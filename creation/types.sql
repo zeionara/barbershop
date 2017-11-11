@@ -51,3 +51,12 @@ create or replace type client__ as object (
 );
 drop type clients_table__;
 create or replace type clients_table__ as table of client__;
+
+create or replace type string_client__ as object (
+    name varchar(10),
+    patronymic varchar(50),
+    phone varchar(20),
+    date_ varchar(20)
+);
+drop type string_clients_table__;
+create or replace type string_clients_table__ as table of string_client__;
