@@ -1,3 +1,4 @@
+--basic data about clients of the barbershop
 create table clients( 
     id int not null,
     name varchar(10) not null,
@@ -9,6 +10,7 @@ create table clients(
     constraint clients_pk primary key (id)
 );
 
+--possible positions of workers and it's descriptions
 create table positions(
     id int not null,
     name varchar(50) not null,
@@ -17,6 +19,9 @@ create table positions(
     constraint positions_pk primary key (id)
 );
 
+--possible qualifications of workers, it's descriptions and
+--lists of services which each worker having this qualification
+--can provide
 create table qualifications(
     id int not null,
     name varchar(50) not null,
@@ -27,9 +32,7 @@ create table qualifications(
 )nested table rendered_services store as nested_rendered_services;
 alter table nested_rendered_services add constraint unique_nested_services_id unique(id);
 
---insert into positions (name) values ('Демон - парикмахер');
---select * from positions;
-
+--basic data about workers of the barbershop
 create table workers(
     id int not null,
     name varchar(10) not null,
@@ -44,12 +47,8 @@ create table workers(
     constraint workers_positions_fk foreign key(position) references positions(id),
     constraint workers_qualification_fk foreign key(qualification) references qualifications(id)
 );
---alter table workers add qualification int;
---update workers set qualification = 1 where id = 2;
---alter table workers modify qualification int not null;
---alter table workers add constraint workers_qualification_fk foreign key(qualification) references qualifications(id);
 
-
+--contacts for communicating with people connected to the barbershop
 create table contacts(
     id int not null,
     person_id int not null,
@@ -57,10 +56,11 @@ create table contacts(
     type varchar(10) not null check(type in ('phone','e-mail','vk')),
     contact varchar(20) not null,
 
-    constraint contacts_pk primary key (id),
-    constraint person_id_clients_workers_fk check(is_person_id_valid(person_status));
+    constraint contacts_pk primary key (id)
 );
 
+--possible services with prices (in roubles), descriptions and average duration
+--(in minutes) which the barbershop can provide
 create table services(
     id int not null,
     name varchar(20) not null,
@@ -70,8 +70,9 @@ create table services(
     
     constraint services_pk primary key (id)
 );
---alter table services add avg_duration int;
 
+--requests to the barbershop from clients including necessary
+--resources with quantity of them
 create table requests(
     id int not null,
     visit_date_time timestamp not null,
@@ -87,9 +88,9 @@ create table requests(
     constraint requests_clients_fk foreign key(client_id) references clients(id),
     constraint requests_services_fk foreign key(service_id) references services(id)
 )nested table holdings store as nested_holdings;
---select * from requests;
-alter table requests add holdings holdings_table__ nested table holdings store as nested_holdings;
 
+--resources which the barbeshop uses during serving clients
+--with remaining amount
 create table holdings(
     id int not null,
     name varchar(100) not null,
@@ -99,6 +100,7 @@ create table holdings(
     constraint holdings_pk primary key (id)
 );
 
+--sizes of daily salaries of workers
 create table salaries(
     id int not null,
     worker_id int not null,
@@ -111,6 +113,7 @@ create table salaries(
     constraint salaries_workers_unique unique(worker_id)
 );
 
+--sizes of rewards for workers if they do their work very well
 create table premiums_sizes(
     id int not null,
     name varchar(20) not null,
@@ -121,6 +124,7 @@ create table premiums_sizes(
     constraint premiums_sizes_pk primary key(id)
 );
 
+--journal of given rewards
 create table premiums(
     id int not null,
     premium_id int not null,
@@ -134,6 +138,7 @@ create table premiums(
     constraint premiums_premiums_sizes_fk foreign key(premium_id) references premiums_sizes(id)
 );
 
+--people's accounts on the website of the barbershop
 create table accounts(
     id int not null,
     person_id int not null,
@@ -144,8 +149,8 @@ create table accounts(
     
     constraint accounts_pk primary key(id)
 );
-select * from accounts;
 
+--possible states of workers like 'basic', 'sick', 'resting', etc
 create table workers_states(
     id int not null,
     name varchar(20) not null,
@@ -153,10 +158,9 @@ create table workers_states(
     
     constraint workers_statuses_pk primary key(id)
 );
---alter table workers_statuses rename to workers_states;
---select * from workers_states;
-select * from workers;
 
+--states of workers for each day
+--(if there is no entry for a day by default the worker is working that day)
 create table workers_date_states(
     id int not null,
     worker_id int not null,
@@ -167,5 +171,3 @@ create table workers_date_states(
     constraint wds_workers_unique unique(worker_id)
 )nested table states.day_state_table store as nested_states;
 alter table nested_states add constraint unique_dates unique(date_);
---alter table workers_date_states add constraint wds_workers_unique unique(worker_id);
---drop table workers_date_states;

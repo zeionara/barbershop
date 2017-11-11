@@ -89,21 +89,6 @@ BEGIN
     );
     return intersection_degree = 0;
 END;
-/*
-insert into requests (visit_date_time, worker_id, client_id, service_id) 
-values (to_timestamp ('10-11-02 13:30', 'DD-MM-RR HH24:MI'), 2, 1, 2);
-
-declare
-vv boolean;
-begin
-    vv := is_master_unbusy(to_timestamp ('10-11-02 13:30', 'DD-MM-RR HH24:MI'), 2, 2);
-    if vv then dbms_output.put_line('Master is unbusy:');
-    end if;
-end;
-
-select * from requests;
-*/
-select is_premium_valid(1,1) from dual;
 
 CREATE OR REPLACE FUNCTION is_premium_valid(premium_size numeric, premium_id int) RETURN boolean is
 cnt number;
@@ -115,6 +100,7 @@ BEGIN
     return (premium_size > min_p) and (premium_size < max_p);
 END;
 
+--check is the set of states contains duplicated date of incorrect ids of state
 CREATE OR REPLACE FUNCTION is_states_valid(states day_states__) RETURN boolean is
 cnt int;
 day_state_table day_state_table__;
@@ -135,30 +121,6 @@ BEGIN
     end loop;
     return true;
 END;
-
-set serveroutput on;
-declare
-vv boolean;
-dst day_state__;
-hlt holding__;
-svt service__;
-begin
-    /*dst := new_day_state(TO_DATE('2003/07/09', 'yyyy/mm/dd'), 1);
-    hlt := new_holding(1,20);
-    vv := is_states_valid(day_states__(day_state_table__(day_state__(TO_DATE('2003/07/09', 'yyyy/mm/dd'), 1),
-                                                 day_state__(TO_DATE('2003/07/10', 'yyyy/mm/dd'), 2))));
-    if vv then dbms_output.put_line('States are valid');
-    else dbms_output.put_line('States are invalid');
-    end if;
-    */
-    --svt := new_service(1);
-    vv := is_master_unbusy(to_timestamp ('11-07-2003 13:30', 'DD-MM-RR HH24:MI'), 2, 2);
-    if vv then dbms_output.put_line('Master is unbusy:');
-    end if;
-    return 11;
-end;
-
-select * from requests;
 
 ---
 ---constructors
@@ -202,9 +164,3 @@ BEGIN
     service_tmp := service__(id_);
     return service_tmp;
 END;
-
-select trunc(cast(to_timestamp ('09-07-2003 02:00', 'DD-MM-RR HH24:MI') as date)) - TO_DATE('2003/07/09', 'yyyy/mm/dd')  from dual;
-
-select state_code
-    from table(select treat(states as day_states__).day_state_table from workers_date_states where worker_id = 2)
-    where date_ = trunc(cast(to_timestamp ('10-07-2003 13:30', 'DD-MM-RR HH24:MI') as date));

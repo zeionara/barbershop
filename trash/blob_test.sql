@@ -9,3 +9,5 @@ CREATE TABLE lob_tab (
 );
 
 select * from lob_tab;
+
+select * from accounts;

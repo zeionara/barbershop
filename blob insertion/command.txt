@@ -1,0 +1,1 @@
+sqlldr control=map.ctl log=avas.log bad=bad.bad

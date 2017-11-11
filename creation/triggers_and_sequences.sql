@@ -1,3 +1,8 @@
+
+--
+--triggers and sequences for generating primary keys
+--
+
 create sequence clients_id_seq START WITH 1;
 
 create or replace trigger clients_id_bir 
@@ -162,6 +167,10 @@ begin
   into   :new.id
   from   dual;
 end;
+
+--
+--triggers for checking values before insert or update
+--
 
 CREATE OR REPLACE TRIGGER contacts_before_insert
 BEFORE INSERT
