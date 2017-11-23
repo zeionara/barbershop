@@ -26,7 +26,12 @@ commands = (('get_schedule','gs', 'master_id [date_of_visit_in_format_10.10.2010
             ('delete_premium_size','dps','premium_id'),
             ('create_premium','cpr','worker_id premium_id earning_date_in_format_10.10.2010 premium_size [note]'),
             ('update_premium','upr','premium_id [-w worker_id] [-p preium_id] [-e earning_date in format 10.10.2010] [-s premium_size] [-d note]'),
-            ('delete_premium','dpr','premium_id'))
+            ('delete_premium','dpr','premium_id'),
+            ('create_worker_day_state','cwds','worker_id date_in_format_10.10.2010 state_id'),
+            ('delete_worker_day_state','dwds','worker_id date_in_format_10.10.2010'))
+
+def get_actual(table_name, column_name, ident):
+    return cursor.execute("select %s from %s where id = %s" % (column_name,table_name,ident)).fetchall()[0][0]
 
 def get_date(string_date):
     return datetime.datetime.strptime(string_date, '%d.%m.%Y').date()
@@ -45,6 +50,12 @@ def get_parameter(command, code):
         return command[command.index(code) + 1]
     except ValueError:
         return None
+
+def get_parameter_def(command, code, table_name, column_name, ident):
+    try:
+        return command[command.index(code) + 1]
+    except ValueError:
+        return get_actual(table_name, column_name, ident)
 
 def get_last_parameter(command, code):
     try:
@@ -168,8 +179,11 @@ def handle_delete_contact(command, cursor, connection):
     notify_delete(res)
 
 def handle_update_contact(command, cursor, connection):
-    args = cursor.callproc('CONTACTS_tapi.upd', (get_parameter(command, "-c"), get_parameter(command, "-s"),
-                                                 get_parameter(command, "-i"), command[1], get_parameter(command, "-t")))
+    args = cursor.callproc('CONTACTS_tapi.upd', (get_parameter_def(command, "-c", "contacts", "contact", str(command[1])),
+                                                 get_parameter_def(command, "-s", "contacts", "person_status", str(command[1])),
+                                                 get_parameter_def(command, "-i", "contacts", "person_id", str(command[1])),
+                                                 command[1],
+                                                 get_parameter_def(command, "-t", "contacts", "type", str(command[1]))))
     res = int(args[3])
     conn.commit()
     notify_update(res)
@@ -280,6 +294,21 @@ def handle_update_premium(command, cursor, connection):
 def handle_delete_premium(command, cursor, connection):
     handle_delete(command, cursor, connection, 'PREMIUMS_tapi.del')
 
+#worker_id date_in_format_10.10.2010 state_id
+def handle_create_worker_date_state(command, cursor, connection):
+    if len(command) == 4:
+        args = cursor.callproc('WORKERS_DATE_STATES_tapi.ins_ins', (int(command[1]),get_date(command[2]),int(command[3])))
+        res = int(args[0])
+        conn.commit()
+    notify_insert(res)
+
+def handle_delete_worker_date_state(command, cursor, connection):
+    if len(command) == 3:
+        args = cursor.callproc('WORKERS_DATE_STATES_tapi.del_del', (int(command[1]),get_date(command[2])))
+        res = int(args[0])
+        conn.commit()
+    notify_delete(res)
+
 #main
 
 if __name__ == '__main__':
@@ -287,6 +316,10 @@ if __name__ == '__main__':
     cursor = result[0]
     
     conn = result[1]
+    print(get_actual("workers_states","name","1"));
+    print(cursor.execute("select name from workers_states where id = 1").fetchall()[0][0])
+    for row in cursor:
+        print(row)
     while(True):
         command = input('\nType a command (\'list\' to get available commands or \'exit\' to exit): \n\n').split(' ');
         print(get_parameter(command, "-i"))
@@ -351,6 +384,11 @@ if __name__ == '__main__':
             handle_update_premium(command, cursor, conn)
         elif command[0] == 'dpr':
             handle_delete_premium(command, cursor, conn)
+        #worker_date_states
+        elif command[0] == 'cwds':
+            handle_create_worker_date_state(command, cursor, conn)
+        elif command[0] == 'dwds':
+            handle_delete_worker_date_state(command, cursor, conn)
         elif command[0] == 'exit':
             break;
         

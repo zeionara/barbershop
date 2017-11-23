@@ -479,6 +479,8 @@ set serveroutput on;
 insert into contacts (person_id, person_status, type, contact) values (1,'client','phone','+7 (973) 122-3304');
 select * from workers;
 
+select name from workers_states where id = 1;
+
 insert into premiums (premium_id, worker_id, earning_date, premium_size)
 values(1, 2, to_date('10-03-02','DD-MM-RR'), 1000);
 select * from premiums;

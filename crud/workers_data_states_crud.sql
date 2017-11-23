@@ -14,6 +14,12 @@ p_WORKER_ID in WORKERS_DATE_STATES.WORKER_ID%type
 ,p_STATES in WORKERS_DATE_STATES.STATES%type default null 
 ,p_ID out WORKERS_DATE_STATES.ID%type
 );
+--
+procedure ins_ins (
+p_WORKER_ID in WORKERS_DATE_STATES.WORKER_ID%type
+,p_DATE in NESTED_STATES.DATE_%type
+,p_STATE_CODE in NESTED_STATES.STATE_CODE%type
+);
 -- update
 procedure upd (
 p_WORKER_ID in WORKERS_DATE_STATES.WORKER_ID%type
@@ -23,6 +29,11 @@ p_WORKER_ID in WORKERS_DATE_STATES.WORKER_ID%type
 -- delete
 procedure del (
 p_ID in WORKERS_DATE_STATES.ID%type
+);
+--
+procedure del_del (
+p_WORKER_ID in WORKERS_DATE_STATES.WORKER_ID%type
+,p_DATE in NESTED_STATES.DATE_%type
 );
 end WORKERS_DATE_STATES_tapi;
 
@@ -43,6 +54,16 @@ WORKER_ID
 p_WORKER_ID
 ,p_STATES
 )returning ID into p_ID;end;
+--
+procedure ins_ins (
+p_WORKER_ID in WORKERS_DATE_STATES.WORKER_ID%type
+,p_DATE in NESTED_STATES.DATE_%type
+,p_STATE_CODE in NESTED_STATES.STATE_CODE%type
+) is
+begin
+insert into table(select treat(states as day_states__).day_state_table from workers_date_states where worker_id = p_WORKER_ID) (DATE_, STATE_CODE) 
+values (p_DATE, p_STATE_CODE);
+end;
 -- update
 procedure upd (
 p_WORKER_ID in WORKERS_DATE_STATES.WORKER_ID%type
@@ -62,5 +83,14 @@ p_ID in WORKERS_DATE_STATES.ID%type
 begin
 delete from WORKERS_DATE_STATES
 where ID = p_ID;
+end;
+--
+procedure del_del (
+p_WORKER_ID in WORKERS_DATE_STATES.WORKER_ID%type
+,p_DATE in NESTED_STATES.DATE_%type
+) is
+begin
+delete from table(select treat(states as day_states__).day_state_table from workers_date_states where worker_id = p_WORKER_ID)
+where DATE_ = p_DATE;
 end;
 end WORKERS_DATE_STATES_tapi;
