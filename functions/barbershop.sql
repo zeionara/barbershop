@@ -83,6 +83,7 @@ vv boolean;
 clients clients_table__;
 client client__;
 ind int;
+ide int;
 begin
     --clients := clients_table__(null);
     --clients.extend(100);
@@ -90,6 +91,9 @@ begin
     --delete from opop;
     --insert into opop values (client__('a', 'a', 'a', TO_DATE('2002/11/10', 'yyyy/mm/dd')));
     clients := barbershop.get_clients_list(2, TO_DATE('2002/11/10', 'yyyy/mm/dd'));
+    --WORKERS_STATES_TAPI.del(3);
+    --WORKERS_STATES_TAPI.ins(NULL, ide, 'отпуск');
+    ide := WORKERS_STATES_TAPI.ins_f(null, 'командировка');
     for ind in clients.first .. clients.last loop
       client := clients(ind);
       dbms_output.put_line(client.name || ' ' || client.patronymic || ' запись на ' || to_char(client.date_,'HH24:MI') || '. Номер телефона : ' || client.phone);
