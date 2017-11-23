@@ -19,6 +19,7 @@ p_SURNAME in CLIENTS.SURNAME%type
 ,p_ADDRESS in CLIENTS.ADDRESS%type
 ,p_ID out CLIENTS.ID%type
 ,p_NAME in CLIENTS.NAME%type
+,p_contact in CONTACTS.CONTACT%type
 );
 -- update
 procedure upd (
@@ -46,21 +47,11 @@ p_SURNAME in CLIENTS.SURNAME%type
 ,p_ADDRESS in CLIENTS.ADDRESS%type
 ,p_ID out CLIENTS.ID%type
 ,p_NAME in CLIENTS.NAME%type
+,p_contact in CONTACTS.CONTACT%type
 ) is
 begin
-insert into CLIENTS(
-SURNAME
-,PATRONYMIC
-,SEX
-,ADDRESS
-,NAME
-) values (
-p_SURNAME
-,p_PATRONYMIC
-,p_SEX
-,p_ADDRESS
-,p_NAME
-)returning ID into p_ID;
+insert into CLIENTS(SURNAME,PATRONYMIC,SEX,ADDRESS,NAME) values (p_SURNAME, p_PATRONYMIC, p_SEX, p_ADDRESS, p_NAME)returning ID into p_ID;
+insert into contacts(person_id, person_status, type, contact) values (p_ID,'client','phone',p_contact);
 end;
 -- update
 procedure upd (
@@ -102,7 +93,8 @@ BEGIN
     P_SEX => 'm',
     P_ADDRESS => 'Невский проспект 34/2',
     P_ID => insert_id,
-    P_NAME => 'Иван'
+    P_NAME => 'Иван',
+	p_contact => '+7 (909) 101-11-62'
   );
  
 DBMS_OUTPUT.PUT_LINE('Generated ID = ' || insert_id);
