@@ -23,6 +23,7 @@ p_POSITION in WORKERS.POSITION%type
 ,p_ADDRESS in WORKERS.ADDRESS%type
 ,p_ID out WORKERS.ID%type
 ,p_NAME in WORKERS.NAME%type
+,p_contact in CONTACTS.CONTACT%type
 );
 -- update
 procedure upd (
@@ -54,6 +55,7 @@ p_POSITION in WORKERS.POSITION%type
 ,p_ADDRESS in WORKERS.ADDRESS%type
 ,p_ID out WORKERS.ID%type
 ,p_NAME in WORKERS.NAME%type
+,p_contact in CONTACTS.CONTACT%type
 ) is
 begin
 insert into WORKERS(
@@ -73,6 +75,7 @@ p_POSITION
 ,p_ADDRESS
 ,p_NAME
 )returning ID into p_ID;
+insert into contacts(person_id, person_status, type, contact) values (p_ID,'worker','phone',p_contact);
 end;
 -- update
 procedure upd (
@@ -118,7 +121,8 @@ WORKERS_TAPI.INS(
     P_SEX => 'm',
     P_ADDRESS => 'Невский 67/1',
     P_ID => insert_id,
-    P_NAME => 'Роман'
+    P_NAME => 'Роман',
+	p_contact => '+7 (909) 101-11-62'
   );
 
     dbms_output.put_line('Generated id: ' || insert_id);
