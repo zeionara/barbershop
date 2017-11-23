@@ -66,18 +66,18 @@ p_DESCRIPTION in WORKERS_STATES.DESCRIPTION%type default null
 ) is
 begin
 if p_DESCRIPTION is null then
-update WORKERS_STATES set
-NAME = p_NAME
-where ID = p_ID;
-else if p_NAME is null then
-update WORKERS_STATES set
-DESCRIPTION = p_DESCRIPTION
-where ID = p_ID;
+    update WORKERS_STATES set
+    NAME = p_NAME
+    where ID = p_ID;
+elsif p_NAME is null then
+    update WORKERS_STATES set
+    DESCRIPTION = p_DESCRIPTION
+    where ID = p_ID;
 else
-update WORKERS_STATES set
-DESCRIPTION = p_DESCRIPTION
-,NAME = p_NAME
-where ID = p_ID;
+    update WORKERS_STATES set
+    DESCRIPTION = p_DESCRIPTION
+    ,NAME = p_NAME
+    where ID = p_ID;
 end if;
 end;
 -- del
@@ -88,4 +88,4 @@ begin
 delete from WORKERS_STATES
 where ID = p_ID;
 end;
-end;
+end WORKERS_STATES_tapi;
