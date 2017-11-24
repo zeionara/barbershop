@@ -20,7 +20,8 @@ insert into workers (name, surname, sex, address, position, qualification)
 values ('Суини','Тодд','m','Флит-стрит 13 корпус 6 квартира 666','Демон-парикмахер','цирюльник');
 insert into contacts (person_id, person_status, type, contact) values (2,'client','phone','+7 (911) 934-33-63');
 select * from contacts;
-insert into services (name, price) values ('Бритье налысо',100);
+select * from services;
+insert into services (name, price) values ('Бритье налысо с',100);
 insert into services (name, price) values ('Хипстерская стрижка',300);
 insert into requests (visit_date_time, worker_id, client_id, service_id) 
 values (to_timestamp ('10-11-02 16:10', 'DD-MM-RR HH24:MI'), 2, 2, 2);
@@ -55,7 +56,10 @@ select * from table(select treat(states as day_states__).day_state_table from wo
 delete from workers_date_states;
 select * from services;
 select table_name, nested from all_tables where nested like 'YES';
-insert into qualifications (name, rendered_services) values ('цирюльник',services_table__(new_service(1),new_service(2)));
+select * from contacts;
+commit();
+insert into qualifications (name, rendered_services) values ('цирюльникс',services_table__(new_service(22)));
+select * from nested_rendered_services;
 select * from table(select rendered_services from qualifications where id = (select qualification from workers where id = 2));
 
 select id, person_id, person_status, login, passwd, dbms_lob.getlength(avatar) size_of_avatar_in_bytes from accounts;
