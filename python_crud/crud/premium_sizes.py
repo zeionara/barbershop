@@ -18,12 +18,13 @@ def create(command, cursor, connection):
     notifiers.notify_insert(res)
 
 def update(command, cursor, connection):
+    col = commons.get_unset_fields(command, columns, table_name, cursor)
     if len(command) >= 2:
-        args = cursor.callproc('PREMIUMS_SIZES_tapi.upd', (int(parameter_getters.get_parameter(command, "-min")),
-                                                           int(parameter_getters.get_parameter(command, "-max")),
-                                                           parameter_getters.get_last_parameter(command, "-d"),
+        args = cursor.callproc('PREMIUMS_SIZES_tapi.upd', (int(parameter_getters.get_parameter_col(command, "-min", col)),
+                                                           int(parameter_getters.get_parameter_col(command, "-max", col)),
+                                                           parameter_getters.get_parameter_col(command, "-d", col),
                                                            command[1],
-                                                           parameter_getters.get_parameter(command, "-n")))
+                                                           parameter_getters.get_parameter_col(command, "-n", col)))
         res = int(args[3])
         connection.commit()
     notifiers.notify_update(res)

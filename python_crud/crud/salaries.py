@@ -18,11 +18,12 @@ def create(command, cursor, connection):
     notifiers.notify_insert(res)
 
 def update(command, cursor, connection):
+    col = commons.get_unset_fields(command, columns, table_name, cursor)
     if len(command) >= 2:
-        args = cursor.callproc('SALARIES_tapi.upd', (int(parameter_getters.get_parameter(command, "-i")),
-                                                     int(parameter_getters.get_parameter(command, "-v")),
-                                                     int(parameter_getters.get_parameter(command, "-s")),
-                                                     int(parameter_getters.get_parameter(command, "-c")),
+        args = cursor.callproc('SALARIES_tapi.upd', (int(parameter_getters.get_parameter_col(command, "-w",col)),
+                                                     int(parameter_getters.get_parameter_col(command, "-v",col)),
+                                                     int(parameter_getters.get_parameter_col(command, "-s",col)),
+                                                     int(parameter_getters.get_parameter_col(command, "-c",col)),
                                                      int(command[1])))
         res = int(args[4])
         connection.commit()
@@ -30,10 +31,6 @@ def update(command, cursor, connection):
 
 def delete(command, cursor, connection):
     commons.handle_delete(command, cursor, connection, 'SALARIES_tapi.del')
-
-def read(command, cursor, connection):
-    field_size = 15
-    commons.read(table_name, columns, field_size, command, cursor)
 
 def read(command, cursor, connection):
     field_size = 15

@@ -3,6 +3,11 @@ sys.path.insert(0, '../')
 
 import cx_Oracle
 import notifiers
+import commons
+import parameter_getters
+
+table_name = "workers_states"
+columns = (("id", "-i", "int", 10), ("name","-n", "str", 20), ("description","-d", "str", 50))
 
 def create(command, cursor, connection):
     if len(command) == 2:
@@ -21,16 +26,13 @@ def delete(command, cursor, connection):
     notifiers.notify_delete(res)
 
 def update(command, cursor, connection):
-    if (len(command) == 4) and (command[2] == '-n'):
-        res = cursor.callproc('WORKERS_STATES_tapi.upd', (None, int(command[1]), command[3]))
-        connection.commit()
-        res = int(command[1])
-    elif (len(command) > 4) and (command[2] == '-n'):
-        res = cursor.callproc('WORKERS_STATES_tapi.upd', (" ".join(command[4:]), int(command[1]), command[3]))
-        connection.commit()
-        res = int(command[1])
-    elif (len(command) > 4):
-        res = cursor.callproc('WORKERS_STATES_tapi.upd', (" ".join(command[2:]), int(command[1]), None))
-        connection.commit()
-        res = int(command[1])
+    col = commons.get_unset_fields(command, columns, table_name, cursor)
+    res = cursor.callproc('WORKERS_STATES_tapi.upd', (parameter_getters.get_parameter_col(command, "-d", col), int(command[1]),
+                                                      parameter_getters.get_parameter_col(command, "-n", col)))
+    connection.commit()
+    res = int(command[1])
     notifiers.notify_update(res)
+
+def read(command, cursor, connection):
+    field_size = 15
+    commons.read(table_name, columns, field_size, command, cursor)

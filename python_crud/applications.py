@@ -35,6 +35,7 @@ if __name__ == '__main__':
     #print(cursor.execute("select * from table(select treat(states as day_states__).day_state_table from workers_date_states where worker_id = 2)").fetchall())
     print(parameter_getters.get_long_parameter_e(["a","b","-c","Hello","my","friend","!","op"],"-c"))
     print(commons.select(cursor, "services",["*"],["id"],["1"]).fetchall())
+    print(cursor.execute("select * from premiums").fetchall())
     while(True):
         command = input('\nType a command (\'list\' to get available commands or \'exit\' to exit): \n\n').split(' ');
         

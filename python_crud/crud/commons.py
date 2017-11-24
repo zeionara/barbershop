@@ -3,6 +3,7 @@ import sys
 sys.path.insert(0, '../')
 
 import notifiers
+import datetime
 
 
 def handle_delete(command, cursor, connection, proc_name):
@@ -13,6 +14,8 @@ def handle_delete(command, cursor, connection, proc_name):
     notifiers.notify_delete(res)
 
 def get_date(string_date):
+    if (isinstance(string_date,datetime.datetime)):
+        return string_date
     return datetime.datetime.strptime(string_date, '%d.%m.%Y').date()
 
 def select(cursor, table_name, columns_to_show, columns_to_check, values_to_check):
@@ -111,3 +114,22 @@ def get_ent(column):
 
 def get_column_shorts(columns):
     return " ".join([get_ent(column) for column in columns]) + " [-a]"
+
+def get_columns_lists(command, columns):
+    columns_long_names = []
+    columns_short_names = []
+    for column in columns:
+        if (parameter_getters.check_flag(command,column[1]) == False) and (column[0] != "id"):
+            columns_long_names.append(column[0])
+            columns_short_names.append(column[1])
+    return columns_long_names, columns_short_names
+
+def get_unset_fields(command, columns, table_name, cursor):
+    columns_long_names, columns_short_names = get_columns_lists(command, columns)
+    actual_data = select(cursor, table_name, columns_long_names, ["id"], [str(command[1])]).fetchall()[0]
+    print(actual_data)
+    unset_fields = []
+    for i in range(len(columns_long_names)):
+        unset_fields.append((columns_short_names[i], actual_data[i]))
+    print(unset_fields)
+    return unset_fields

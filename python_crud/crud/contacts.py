@@ -23,7 +23,7 @@ def delete(command, cursor, connection):
     notifiers.notify_delete(res)
 
 def update(command, cursor, connection):
-    col = get_unset_fields(command, columns, table_name, cursor)
+    col = commons.get_unset_fields(command, columns, table_name, cursor)
     args = cursor.callproc('CONTACTS_tapi.upd', (parameter_getters.get_parameter_col(command, "-c", col), parameter_getters.get_parameter_col(command, "-s", col),
            parameter_getters.get_parameter_col(command, "-i", col), command[1],
            parameter_getters.get_parameter_col(command, "-t", col)))
@@ -34,23 +34,6 @@ def update(command, cursor, connection):
 def read(command, cursor, connection):
     field_size = 15
     commons.read(table_name, columns, field_size, command, cursor)
-
-def get_columns_lists(command, columns):
-    columns_long_names = []
-    columns_short_names = []
-    for column in columns:
-        if (parameter_getters.check_flag(command,column[1]) == False) and (column[0] != "id"):
-            columns_long_names.append(column[0])
-            columns_short_names.append(column[1])
-    return columns_long_names, columns_short_names
-
-def get_unset_fields(command, columns, table_name, cursor):
-    columns_long_names, columns_short_names = get_columns_lists(command, columns)
-    actual_data = commons.select(cursor, table_name, columns_long_names, ["id"], str(command[1])).fetchall()[0]
-    unset_fields = []
-    for i in range(len(columns_long_names)):
-        unset_fields.append((columns_short_names[i], actual_data[i]))
-    return unset_fields
     
 def fake(command, cursor, connection):
     col = get_unset_fields(command, columns, table_name, cursor)

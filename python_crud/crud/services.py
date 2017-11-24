@@ -27,15 +27,16 @@ def create(command, cursor, connection):
 
 
 def update(command, cursor, connection):
-    args = cursor.callproc('SERVICES_tapi.upd', (parameter_getters.get_parameter(command, "-p"),
-                                                 parameter_getters.get_last_parameter(command, "-d"),
+    col = commons.get_unset_fields(command, columns, table_name, cursor)
+    args = cursor.callproc('SERVICES_tapi.upd', (parameter_getters.get_parameter_col(command, "-p", col),
+                                                 parameter_getters.get_parameter_col(command, "-d", col),
                                                  command[1],
-                                                 parameter_getters.get_parameter(command, "-a"),
-                                                 parameter_getters.get_parameter(command, "-n")))
+                                                 parameter_getters.get_parameter_col(command, "-a", col),
+                                                 parameter_getters.get_parameter_col(command, "-n", col)))
     res = int(args[2])
     connection.commit()
         
-    notifiers.notify_insert(res)
+    notifiers.notify_update(res)
 
 def delete(command, cursor, connection):
     handle_delete(command, cursor, connection, 'SERVICES_tapi.del')

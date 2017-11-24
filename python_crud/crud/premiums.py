@@ -5,6 +5,7 @@ import cx_Oracle
 import notifiers
 import parameter_getters
 import commons
+import datetime
 
 table_name = "premiums"
 columns = (("id", "-i","int",10), ("premium_id","-p","int",10), ("worker_id","-w","int",10),
@@ -23,12 +24,14 @@ def create(command, cursor, connection):
 
 def update(command, cursor, connection):
     if len(command) >= 2:
-        args = cursor.callproc('PREMIUMS_tapi.upd', (int(parameter_getters.get_parameter(command,"-p")),
-                                                     int(parameter_getters.get_parameter(command,"-w")),
-                                                     commons.get_date(get_parameter(command,"-e")),
-                                                     parameter_getters.get_last_parameter(command,"-d"),
+        col = commons.get_unset_fields(command, columns, table_name, cursor)
+        
+        args = cursor.callproc('PREMIUMS_tapi.upd', (int(parameter_getters.get_parameter_col(command,"-p",col)),
+                                                     int(parameter_getters.get_parameter_col(command,"-w",col)),
+                                                     commons.get_date(parameter_getters.get_parameter_col(command,"-e",col)),
+                                                     parameter_getters.get_parameter_col(command,"-d",col),
                                                      command[1],
-                                                     parameter_getters.get_parameter(command,"-s")))
+                                                     parameter_getters.get_parameter_col(command,"-s",col)))
         res = int(args[4])
         connection.commit()
     notifiers.notify_update(res)

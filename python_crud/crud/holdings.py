@@ -18,10 +18,11 @@ def create(command, cursor, connection):
 
 def update(command, cursor, connection):
     if len(command) >= 2:
-        args = cursor.callproc('HOLDINGS_tapi.upd', (int(parameter_getters.get_parameter(command,"-p")),
-                                                     int(parameter_getters.get_parameter(command,"-q")),
+        col = commons.get_unset_fields(command, columns, table_name, cursor)
+        args = cursor.callproc('HOLDINGS_tapi.upd', (int(parameter_getters.get_parameter_col(command,"-p", col)),
+                                                     int(parameter_getters.get_parameter_col(command,"-q", col)),
                                                      int(command[1]),
-                                                     parameter_getters.get_parameter(command,"-n")))
+                                                     parameter_getters.get_parameter_col(command,"-n", col)))
         res = int(args[2])
         connection.commit()
     notifiers.notify_update(res)
