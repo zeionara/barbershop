@@ -6,6 +6,9 @@ create table clients(
     patronymic varchar(30),
     sex char not null check(sex in ('m','f')),
     address varchar(50) not null,
+    login varchar(20) not null,
+    passwd varchar(20) not null,
+    avatar blob,
 
     constraint clients_pk primary key (id)
 );
@@ -35,6 +38,8 @@ create table qualifications(
 alter table nested_rendered_services add constraint unique_nested_services_id unique(id);
 /
 
+
+--update workers - DROP TABLE workers CASCADE CONSTRAINTS; 
 --basic data about workers of the barbershop
 create table workers(
     id int not null,
@@ -45,6 +50,9 @@ create table workers(
     address varchar(50) not null,
     position int not null,
     qualification int not null,
+	login varchar(20) not null,
+    passwd varchar(20) not null,
+    avatar blob,
 
     constraint workers_pk primary key (id),
     constraint workers_positions_fk foreign key(position) references positions(id),
@@ -147,19 +155,7 @@ create table premiums(
     constraint premiums_workers_fk foreign key(worker_id) references workers(id),
     constraint premiums_premiums_sizes_fk foreign key(premium_id) references premiums_sizes(id)
 );
-/
 
---people's accounts on the website of the barbershop
-create table accounts(
-    id int not null,
-    person_id int not null,
-    person_status varchar(10) not null check(person_status in ('worker','client')),
-    login varchar(20) not null,
-    passwd varchar(20) not null,
-    avatar blob,
-    
-    constraint accounts_pk primary key(id)
-);
 /
 
 --possible states of workers like 'basic', 'sick', 'resting', etc
