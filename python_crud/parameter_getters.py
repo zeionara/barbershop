@@ -16,6 +16,16 @@ def get_parameter_col(command, code, col):
         return None
     except ValueError:
         return get_parameter_from_collection(col, code)
+
+def get_parameter_cmd(command, code):
+    try:
+        index = command.index(code) + 1
+        value = command[index]
+        if value[0] != "-":
+            return " ".join(command[index : find_next_flag(index + 1, command)])
+        return None
+    except ValueError:
+        return None
     
 def get_parameter_from_collection(collection, code):
     for item in collection:

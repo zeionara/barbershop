@@ -6,9 +6,9 @@ import notifiers
 import parameter_getters
 import commons
 
-tapi_name = 'HOLDINGS_tapi'
-table_name = "holdings"
-columns = (("id", "-i", "int", 10, 2, -2), ("name","-n", "str", 100, 3, 1), ("price","-p","int", 15, 0, 2), ("quantity","-q","int", 15, 1, 3))
+tapi_name = 'CLIENTS_tapi'
+table_name = "clients"
+#column = (column_name, short_name, type, field_size, parameter_index, insert_index)
 
 def create(command, cursor, connection):
     commons.create(command, cursor, connection, columns, table_name, tapi_name)

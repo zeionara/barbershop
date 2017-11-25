@@ -50,13 +50,13 @@ select * from workers_date_states;
 
 insert into table(select treat(states as day_states__).day_state_table from workers_date_states where worker_id = 2) (DATE_, STATE_CODE) 
 values (TO_DATE('2004/07/10', 'yyyy/mm/dd'), 1);
-
+select person_id, person_status, type, contact from contacts where id = 5;
 select * from table(select treat(states as day_states__).day_state_table from workers_date_states where worker_id = 2);
 --insert to inner table
 delete from workers_date_states;
 select * from services;
 select table_name, nested from all_tables where nested like 'YES';
-select * from contacts;
+select * from services;
 commit();
 insert into qualifications (name, rendered_services) values ('цирюльникс',services_table__(new_service(22)));
 select * from nested_rendered_services;

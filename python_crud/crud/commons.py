@@ -6,9 +6,9 @@ import notifiers
 import datetime
 
 
-def handle_delete(command, cursor, connection, proc_name):
+def handle_delete(command, cursor, connection, tapi_name):
     if len(command) >= 2:
-        args = cursor.callproc(proc_name, [command[1]])
+        args = cursor.callproc(tapi_name+".del", [command[1]])
         res = int(args[0])
         connection.commit()
     notifiers.notify_delete(res)
@@ -115,6 +115,12 @@ def get_ent(column):
 def get_column_shorts(columns):
     return " ".join([get_ent(column) for column in columns]) + " [-a]"
 
+def get_ent_update(column):
+    return "[ "+column[1]+" "+column[0]+" ]"
+
+def get_column_shorts_update(columns):
+    return columns[0][0] + " " + " ".join([get_ent_update(column) for column in columns[1:]])
+
 def get_columns_lists(command, columns):
     columns_long_names = []
     columns_short_names = []
@@ -133,3 +139,87 @@ def get_unset_fields(command, columns, table_name, cursor):
         unset_fields.append((columns_short_names[i], actual_data[i]))
     print(unset_fields)
     return unset_fields
+
+#############
+def get_column_by_index(columns, index):
+    for column in columns:
+        if (column[4] == index):
+            return column
+
+def parameter_filter(command, col, short_name, long_name, column_type):
+    if long_name == "id":
+        return command[1]
+    elif column_type == "int":
+        return int(parameter_getters.get_parameter_col(command, short_name, col))
+    elif column_type == "date":
+        return get_date(parameter_getters.get_parameter_col(command,short_name, col))
+    else:
+        return parameter_getters.get_parameter_col(command,short_name, col)
+
+def get_parameters_for_update(columns, command, col):
+    parameters = []
+    for i in range(len(columns)):
+        column = get_column_by_index(columns, i)
+        parameters.append(parameter_filter(command, col, column[1], column[0], column[2]))
+    return(tuple(parameters))
+
+def update(command, cursor, connection, columns, table_name, tapi_name):
+    if len(command) >= 2:
+        col = get_unset_fields(command, columns, table_name, cursor)
+        args = cursor.callproc(tapi_name+'.upd', get_parameters_for_update(columns, command, col))
+        res = int(args[columns[0][4]])
+        connection.commit()
+    notifiers.notify_update(res)
+
+#################
+def get_column_by_insert_index_cmd(columns, index):
+    for column in columns:
+        if (column[5] == index):
+            return column[0]
+    return None
+
+def get_column_shorts_insert(columns):
+    seq = []
+    for i in range(1,len(columns)):
+        long_name = get_column_by_insert_index_cmd(columns, i)
+        if long_name == None:
+            break;
+        seq.append(long_name)
+    for column in columns:
+        if column[5] == -1:
+            seq.append("[ "+column[1]+" "+column[0]+" ]");
+    return " ".join(seq)
+
+##
+
+def get_parameters_for_insert(columns, command):
+    parameters = []
+    for i in range(len(columns)):
+        column = get_column_by_index(columns, i)
+        parameters.append(parameter_filter_insert(command, column[1], column[0], column[2], column[5]))
+    return(tuple(parameters))
+
+def parameter_filter_insert(command, short_name, long_name, column_type, insert_index):
+    if long_name == "id":
+        return 0
+    
+    if insert_index > 0:
+        pre_parameter = command[insert_index]
+    else:
+        pre_parameter = parameter_getters.get_parameter_cmd(command, short_name)
+
+    if pre_parameter == None:
+        return pre_parameter
+    
+    if column_type == "int":
+        return int(pre_parameter)
+    elif column_type == "date":
+        return commons.get_date(pre_parameter)
+    else:
+        return pre_parameter
+
+def create(command, cursor, connection, columns, table_name, tapi_name):
+    args = cursor.callproc(tapi_name+'.ins', get_parameters_for_insert(columns, command))
+    res = int(args[columns[0][4]])
+    connection.commit()
+    notifiers.notify_insert(res)
