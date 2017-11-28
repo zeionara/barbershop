@@ -13,6 +13,10 @@ import salaries
 import premium_sizes
 import premiums
 import nested_states
+import clients
+import workers
+import qualifications
+import requests
 
 import commons
 
@@ -57,4 +61,20 @@ commands = sorted((('get_schedule','gs', 'master_id [date_of_visit_in_format_10.
             ('read_premium','rpr',commons.get_column_shorts(premiums.columns), premiums.read),
             ('create_worker_day_state','cwds','worker_id date_in_format_10.10.2010 state_id', nested_states.create),
             ('delete_worker_day_state','dwds','worker_id date_in_format_10.10.2010', nested_states.delete),
-            ('read_worker_day_state','rwds','worker_id '+commons.get_column_shorts(nested_states.columns), nested_states.read)))
+            ('read_worker_day_state','rwds','worker_id '+commons.get_column_shorts(nested_states.columns), nested_states.read),
+            ('create_client','ccl',commons.get_column_shorts_insert(clients.columns_ins), clients.create),
+            ('update_client','ucl',commons.get_column_shorts_update(clients.columns), clients.update),
+            ('delete_client','dcl','client_id', clients.delete),
+            ('read_client','rcl',commons.get_column_shorts(clients.columns), clients.read),
+            ('create_worker','cw',commons.get_column_shorts_insert(workers.columns_ins), workers.create),
+            ('update_worker','uw',commons.get_column_shorts_update(workers.columns), workers.update),
+            ('delete_worker','dw','worker_id', workers.delete),
+            ('read_worker','rw',commons.get_column_shorts(workers.columns), workers.read),
+            ('create_qualification','cq',commons.get_column_shorts_insert(qualifications.columns), qualifications.create),
+            ('update_qualification','uq',commons.get_column_shorts_update(qualifications.columns), qualifications.update),
+            ('delete_qualification','dq','qualification_id', qualifications.delete),
+            ('read_qualification','rq',commons.get_column_shorts(qualifications.columns), qualifications.read),
+            ('create_request','cr',commons.get_column_shorts_insert(requests.columns), requests.create),
+            ('update_request','ur',commons.get_column_shorts_update(requests.columns), requests.update),
+            ('delete_request','dr','request_id', requests.delete),
+            ('read_request','rr',commons.get_column_shorts(requests.columns), requests.read)))

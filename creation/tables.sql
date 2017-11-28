@@ -13,6 +13,8 @@ create table clients(
     constraint clients_pk primary key (id)
 );
 /
+--alter table clients add avatar blob;
+--select * from clients;
 
 --possible positions of workers and it's descriptions
 create table positions(
@@ -59,7 +61,8 @@ create table workers(
     constraint workers_qualification_fk foreign key(qualification) references qualifications(id)
 );
 /
-
+select * from workers;
+--alter table workers add avatar blob;
 --contacts for communicating with people connected to the barbershop
 create table contacts(
     id int not null,

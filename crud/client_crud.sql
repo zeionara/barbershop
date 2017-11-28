@@ -19,6 +19,8 @@ p_SURNAME in CLIENTS.SURNAME%type
 ,p_ADDRESS in CLIENTS.ADDRESS%type
 ,p_ID out CLIENTS.ID%type
 ,p_NAME in CLIENTS.NAME%type
+,p_LOGIN in CLIENTS.LOGIN%type
+,p_PASSWD in CLIENTS.PASSWD%type
 ,p_contact in CONTACTS.CONTACT%type
 );
 -- update
@@ -29,6 +31,8 @@ p_SURNAME in CLIENTS.SURNAME%type
 ,p_ADDRESS in CLIENTS.ADDRESS%type
 ,p_ID in CLIENTS.ID%type
 ,p_NAME in CLIENTS.NAME%type
+,p_LOGIN in CLIENTS.LOGIN%type
+,p_PASSWD in CLIENTS.PASSWD%type
 );
 -- delete
 procedure del (
@@ -47,10 +51,12 @@ p_SURNAME in CLIENTS.SURNAME%type
 ,p_ADDRESS in CLIENTS.ADDRESS%type
 ,p_ID out CLIENTS.ID%type
 ,p_NAME in CLIENTS.NAME%type
+,p_LOGIN in CLIENTS.LOGIN%type
+,p_PASSWD in CLIENTS.PASSWD%type
 ,p_contact in CONTACTS.CONTACT%type
 ) is
 begin
-insert into CLIENTS(SURNAME,PATRONYMIC,SEX,ADDRESS,NAME) values (p_SURNAME, p_PATRONYMIC, p_SEX, p_ADDRESS, p_NAME)returning ID into p_ID;
+insert into CLIENTS(SURNAME,PATRONYMIC,SEX,ADDRESS,NAME,LOGIN,PASSWD) values (p_SURNAME, p_PATRONYMIC, p_SEX, p_ADDRESS, p_NAME, p_LOGIN, p_PASSWD)returning ID into p_ID;
 insert into contacts(person_id, person_status, type, contact) values (p_ID,'client','phone',p_contact);
 end;
 -- update
@@ -61,6 +67,8 @@ p_SURNAME in CLIENTS.SURNAME%type
 ,p_ADDRESS in CLIENTS.ADDRESS%type
 ,p_ID in CLIENTS.ID%type
 ,p_NAME in CLIENTS.NAME%type
+,p_LOGIN in CLIENTS.LOGIN%type
+,p_PASSWD in CLIENTS.PASSWD%type
 ) is
 begin
 update CLIENTS set
@@ -69,6 +77,8 @@ SURNAME = p_SURNAME
 ,SEX = p_SEX
 ,ADDRESS = p_ADDRESS
 ,NAME = p_NAME
+,LOGIN = p_LOGIN
+,PASSWD = p_PASSWD
 where ID = p_ID;
 end;
 -- del
@@ -83,20 +93,4 @@ end CLIENTS_tapi;
 
 -----------------------------------
 
-SET SERVEROUTPUT ON
-DECLARE
-    insert_id CLIENTS.ID%TYPE;
-BEGIN
-  CLIENTS_TAPI.INS(
-    P_SURNAME => 'Смирнов',
-    P_PATRONYMIC => 'Александрович',
-    P_SEX => 'm',
-    P_ADDRESS => 'Невский проспект 34/2',
-    P_ID => insert_id,
-    P_NAME => 'Иван',
-	p_contact => '+7 (909) 101-11-62'
-  );
- 
-DBMS_OUTPUT.PUT_LINE('Generated ID = ' || insert_id);
-  
-END;
+

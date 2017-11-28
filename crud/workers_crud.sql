@@ -23,6 +23,8 @@ p_POSITION in WORKERS.POSITION%type
 ,p_ADDRESS in WORKERS.ADDRESS%type
 ,p_ID out WORKERS.ID%type
 ,p_NAME in WORKERS.NAME%type
+,p_LOGIN in CLIENTS.LOGIN%type
+,p_PASSWD in CLIENTS.PASSWD%type
 ,p_contact in CONTACTS.CONTACT%type
 );
 -- update
@@ -35,6 +37,8 @@ p_POSITION in WORKERS.POSITION%type
 ,p_ADDRESS in WORKERS.ADDRESS%type
 ,p_ID in WORKERS.ID%type
 ,p_NAME in WORKERS.NAME%type
+,p_LOGIN in CLIENTS.LOGIN%type
+,p_PASSWD in CLIENTS.PASSWD%type
 );
 -- delete
 procedure del (
@@ -55,6 +59,8 @@ p_POSITION in WORKERS.POSITION%type
 ,p_ADDRESS in WORKERS.ADDRESS%type
 ,p_ID out WORKERS.ID%type
 ,p_NAME in WORKERS.NAME%type
+,p_LOGIN in CLIENTS.LOGIN%type
+,p_PASSWD in CLIENTS.PASSWD%type
 ,p_contact in CONTACTS.CONTACT%type
 ) is
 begin
@@ -65,6 +71,8 @@ POSITION
 ,PATRONYMIC
 ,SEX
 ,ADDRESS
+,LOGIN
+,PASSWD
 ,NAME
 ) values (
 p_POSITION
@@ -73,6 +81,8 @@ p_POSITION
 ,p_PATRONYMIC
 ,p_SEX
 ,p_ADDRESS
+,p_LOGIN
+,p_PASSWD
 ,p_NAME
 )returning ID into p_ID;
 insert into contacts(person_id, person_status, type, contact) values (p_ID,'worker','phone',p_contact);
@@ -87,6 +97,8 @@ p_POSITION in WORKERS.POSITION%type
 ,p_ADDRESS in WORKERS.ADDRESS%type
 ,p_ID in WORKERS.ID%type
 ,p_NAME in WORKERS.NAME%type
+,p_LOGIN in CLIENTS.LOGIN%type
+,p_PASSWD in CLIENTS.PASSWD%type
 ) is
 begin
 update WORKERS set
@@ -97,6 +109,8 @@ POSITION = p_POSITION
 ,SEX = p_SEX
 ,ADDRESS = p_ADDRESS
 ,NAME = p_NAME
+,LOGIN = p_LOGIN
+,PASSWD = p_PASSWD
 where ID = p_ID;
 end;
 -- del
@@ -109,23 +123,4 @@ where ID = p_ID;
 end;
 end WORKERS_tapi;
 
--------------------------------------------
-declare
-    insert_id WORKERS.ID%TYPE;
-begin
-WORKERS_TAPI.INS(
-    P_POSITION => 1,
-    P_SURNAME => 'Оксанов',
-    P_QUALIFICATION => 1,
-    P_PATRONYMIC => 'Эдуардович',
-    P_SEX => 'm',
-    P_ADDRESS => 'Невский 67/1',
-    P_ID => insert_id,
-    P_NAME => 'Роман',
-	p_contact => '+7 (909) 101-11-62'
-  );
-
-    dbms_output.put_line('Generated id: ' || insert_id);
-
-end;
 

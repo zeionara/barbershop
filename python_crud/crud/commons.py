@@ -4,7 +4,7 @@ sys.path.insert(0, '../')
 
 import notifiers
 import datetime
-
+import connection
 
 def handle_delete(command, cursor, connection, tapi_name):
     if len(command) >= 2:
@@ -18,7 +18,18 @@ def get_date(string_date):
         return string_date
     return datetime.datetime.strptime(string_date, '%d.%m.%Y').date()
 
+def get_datetime(string_date):
+    if (isinstance(string_date,datetime.datetime)):
+        return string_date
+    return datetime.datetime.strptime(string_date, '%d.%m.%Y_%H:%M')
+
 def select(cursor, table_name, columns_to_show, columns_to_check, values_to_check):
+    #print(connection.redis_connector.get("foo"))
+    key = "_".join([table_name,"_".join(columns_to_show),"_".join(columns_to_check),"_".join(values_to_check)])
+    redis_response = connection.redis_connector.get(key)
+    if (redis_response != None):
+        #print("Got from redis!")
+        return rebuild_list(str(redis_response,"utf-8"))
     checking_chain = ""
     showing_chain = ""
     if (len(columns_to_show) == 0):
@@ -29,14 +40,18 @@ def select(cursor, table_name, columns_to_show, columns_to_check, values_to_chec
         else:
             showing_chain = showing_chain + ", " + columns_to_show[i]
     if (len(columns_to_check) == 0):
-        return cursor.execute("select %s from %s" % (showing_chain, table_name))
+        result = cursor.execute("select %s from %s" % (showing_chain, table_name))
+        connection.redis_connector.set(key, [row for row in result])
+        return cursor.execute("select %s from %s" % (showing_chain, table_name)).fetchall()
     for i in range(len(columns_to_check)):
         if checking_chain == "":    
             checking_chain = checking_chain + columns_to_check[i] + " = " + values_to_check[i]
         else:
             checking_chain = checking_chain + " and " + columns_to_check[i] + " = " + values_to_check[i]
-    print("select %s from %s where %s" % (showing_chain, table_name, checking_chain))
-    return cursor.execute("select %s from %s where %s" % (showing_chain, table_name, checking_chain))
+    result = cursor.execute("select %s from %s where %s" % (showing_chain, table_name, checking_chain))
+    connection.redis_connector.set(key, [row for row in result])
+    #print("select %s from %s where %s" % (showing_chain, table_name, checking_chain))
+    return cursor.execute("select %s from %s where %s" % (showing_chain, table_name, checking_chain)).fetchall()
 
 def get_solid_format_string(number_of_entries, length_of_entry):
     format_string = ""
@@ -55,6 +70,7 @@ def align(x, l):
 def strow(row, l, sizes):
     stro = ""
     index = 0
+    row = row[:len(sizes)]
     #print(sizes)
     #print(row)
     for item in row:
@@ -75,7 +91,7 @@ def read(table_name, columns, field_size, command, cursor):
     column_sizes = [column[3] for column in columns]
     if parameter_getters.check_flag(command, "-a"):
         print(strow(column_names, field_size))
-        for row in select(cursor, table_name,["*"],[],[]).fetchall():
+        for row in select(cursor, table_name,["*"],[],[]):
             print(strow(row, field_size))
     else:
         columns_to_show = []
@@ -105,7 +121,7 @@ def read(table_name, columns, field_size, command, cursor):
             print(strow(column_names, field_size, column_sizes))
         else:
             print(strow(columns_to_show, field_size, sizes_to_show))
-        for row in select(cursor, table_name,columns_to_show,columns_to_check,values_to_check).fetchall():
+        for row in select(cursor, table_name,columns_to_show,columns_to_check,values_to_check):
             #print(sizes_to_show)
             print(strow(row, field_size, sizes_to_show))
 
@@ -132,7 +148,7 @@ def get_columns_lists(command, columns):
 
 def get_unset_fields(command, columns, table_name, cursor):
     columns_long_names, columns_short_names = get_columns_lists(command, columns)
-    actual_data = select(cursor, table_name, columns_long_names, ["id"], [str(command[1])]).fetchall()[0]
+    actual_data = select(cursor, table_name, columns_long_names, ["id"], [str(command[1])])[0]
     print(actual_data)
     unset_fields = []
     for i in range(len(columns_long_names)):
@@ -153,6 +169,8 @@ def parameter_filter(command, col, short_name, long_name, column_type):
         return int(parameter_getters.get_parameter_col(command, short_name, col))
     elif column_type == "date":
         return get_date(parameter_getters.get_parameter_col(command,short_name, col))
+    elif column_type == "time":
+        return get_datetime(parameter_getters.get_parameter_col(command,short_name, col))
     else:
         return parameter_getters.get_parameter_col(command,short_name, col)
 
@@ -188,14 +206,18 @@ def get_column_shorts_insert(columns):
     for column in columns:
         if column[5] == -1:
             seq.append("[ "+column[1]+" "+column[0]+" ]");
+        if column[5] == -3:
+            seq.append("< "+column[1]+" "+column[0]+" >");
     return " ".join(seq)
 
 ##
 
 def get_parameters_for_insert(columns, command):
     parameters = []
+    print(columns)
     for i in range(len(columns)):
         column = get_column_by_index(columns, i)
+        print(column)
         parameters.append(parameter_filter_insert(command, column[1], column[0], column[2], column[5]))
     return(tuple(parameters))
 
@@ -214,12 +236,76 @@ def parameter_filter_insert(command, short_name, long_name, column_type, insert_
     if column_type == "int":
         return int(pre_parameter)
     elif column_type == "date":
-        return commons.get_date(pre_parameter)
+        return get_date(pre_parameter)
+    elif column_type == "time":
+        print("time")
+        print(get_datetime(pre_parameter))
+        return get_datetime(pre_parameter)
     else:
         return pre_parameter
 
 def create(command, cursor, connection, columns, table_name, tapi_name):
+    print(get_parameters_for_insert(columns, command))
     args = cursor.callproc(tapi_name+'.ins', get_parameters_for_insert(columns, command))
     res = int(args[columns[0][4]])
     connection.commit()
     notifiers.notify_insert(res)
+
+###REDIS
+
+def is_int(s):
+    try: 
+        int(s)
+        return True
+    except ValueError:
+        return False
+
+def is_float(s):
+    try: 
+        float(s)
+        return True
+    except ValueError:
+        return False
+def parse_type(string):
+    if string == "None":
+        return None
+    if is_int(string):
+        return int(string)
+    if is_float(string):
+        return float(string)
+    if (str.find(string,"DATETIME") != -1):
+        #print(string)
+        arr = [int(elem.rstrip().lstrip()) for elem in string[string.index("<")+1:string.index(">")].split("#")]
+        return datetime.datetime(arr[0],arr[1],arr[2],arr[3],arr[4])
+    return string
+
+def replace(string, index, character):
+    return string[:index] + character + string[index+1:]
+
+def rebuild_list(fi):
+    result = []
+    #print(fi)
+    while (str.find(fi,"datetime.datetime") != -1):
+        #print(fi)
+        
+        beg = str.find(fi,"datetime.datetime")
+        #print(beg)
+        #print(fi.find("(",beg))
+        start = fi.find("(",beg)
+        fi = replace(fi, fi.find("(",beg), "<")
+        end = fi.find(")",beg)
+        fi = replace(fi, fi.find(")",beg), ">")
+        ind = fi.find(",",start, end)
+        while (ind != -1):
+            fi = replace(fi, ind, "#")
+            ind = fi.find(",",start, end)
+
+        fi = fi.replace("datetime.datetime","DATETIME",1)
+        #print(fi)
+    #print(fi)
+    for row in str.split(fi,"),"):
+        row_splitted = row.replace("[","").replace("(","").replace("]","").replace(")","").split(",")
+        row_rebuilt = [parse_type(row_el.lstrip().rstrip().replace("\'","").replace("\"","")) for row_el in row_splitted]
+        result.append(tuple(row_rebuilt))
+    return result
+    

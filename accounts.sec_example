@@ -1,0 +1,7 @@
+[helios]
+login = my_login
+password = my_password
+
+[redis]
+host = redis.com
+port = 1488
