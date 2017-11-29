@@ -27,7 +27,12 @@ def select(cursor, table_name, columns_to_show, columns_to_check, values_to_chec
     #print(connection.redis_connector.get("foo"))
     key = "_".join([table_name,"_".join(columns_to_show),"_".join(columns_to_check),"_".join(values_to_check)])
     redis_response = connection.redis_connector.get(key)
-    if (redis_response != None):
+    try:
+        is_relevant = str(connection.redis_connector.get(table_name+"_is_relevant"),"utf-8").replace('\'','')
+    except TypeError:
+        is_relevant = "False"
+    #print(is_relevant)
+    if (redis_response != None) and (is_relevant == "True"):
         #print("Got from redis!")
         return rebuild_list(str(redis_response,"utf-8"))
     checking_chain = ""
@@ -42,6 +47,7 @@ def select(cursor, table_name, columns_to_show, columns_to_check, values_to_chec
     if (len(columns_to_check) == 0):
         result = cursor.execute("select %s from %s" % (showing_chain, table_name))
         connection.redis_connector.set(key, [row for row in result])
+        connection.redis_connector.set(table_name+"_is_relevant","True")
         return cursor.execute("select %s from %s" % (showing_chain, table_name)).fetchall()
     for i in range(len(columns_to_check)):
         if checking_chain == "":    
@@ -50,6 +56,7 @@ def select(cursor, table_name, columns_to_show, columns_to_check, values_to_chec
             checking_chain = checking_chain + " and " + columns_to_check[i] + " = " + values_to_check[i]
     result = cursor.execute("select %s from %s where %s" % (showing_chain, table_name, checking_chain))
     connection.redis_connector.set(key, [row for row in result])
+    connection.redis_connector.set(table_name+"_is_relevant","True")
     #print("select %s from %s where %s" % (showing_chain, table_name, checking_chain))
     return cursor.execute("select %s from %s where %s" % (showing_chain, table_name, checking_chain)).fetchall()
 
@@ -158,7 +165,9 @@ def get_unset_fields(command, columns, table_name, cursor):
 
 #############
 def get_column_by_index(columns, index):
+    print("search for %s" % str(index))
     for column in columns:
+        print(column)
         if (column[4] == index):
             return column
 
@@ -181,13 +190,27 @@ def get_parameters_for_update(columns, command, col):
         parameters.append(parameter_filter(command, col, column[1], column[0], column[2]))
     return(tuple(parameters))
 
-def update(command, cursor, connection, columns, table_name, tapi_name):
+def update(command, cursor, conn, columns, table_name, tapi_name):
     if len(command) >= 2:
         col = get_unset_fields(command, columns, table_name, cursor)
         args = cursor.callproc(tapi_name+'.upd', get_parameters_for_update(columns, command, col))
         res = int(args[columns[0][4]])
-        connection.commit()
+        conn.commit()
     notifiers.notify_update(res)
+    connection.redis_connector.set(table_name+"_is_relevant","False")
+
+def update_e(command, cursor, conn, columns, table_name, tapi_name, parent_id):
+    table_name = table_name + str(parent_id) + ")"
+    update(command, cursor, conn, columns, table_name, tapi_name)
+
+def delete_e(command, cursor, connection, tapi_name, parent_id, id_type):
+    if (id_type == "date"):
+        command[1] = get_date(command[1])
+    print((parent_id,command[1]))
+    args = cursor.callproc(tapi_name+".del", (parent_id,command[1]))
+    res = int(args[0])
+    connection.commit()
+    notifiers.notify_delete(res)
 
 #################
 def get_column_by_insert_index_cmd(columns, index):
@@ -244,12 +267,18 @@ def parameter_filter_insert(command, short_name, long_name, column_type, insert_
     else:
         return pre_parameter
 
-def create(command, cursor, connection, columns, table_name, tapi_name):
+def create(command, cursor, conn, columns, table_name, tapi_name):
     print(get_parameters_for_insert(columns, command))
-    args = cursor.callproc(tapi_name+'.ins', get_parameters_for_insert(columns, command))
+    argss = get_parameters_for_insert(columns, command)
+    ss = [2]
+    for arg in argss:
+        ss.append(arg)
+    
+    args = cursor.callproc(tapi_name+'.ins', ss)
     res = int(args[columns[0][4]])
-    connection.commit()
+    conn.commit()
     notifiers.notify_insert(res)
+    connection.redis_connector.set(table_name+"_is_relevant","False")
 
 ###REDIS
 

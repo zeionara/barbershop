@@ -40,7 +40,7 @@ if __name__ == '__main__':
     #print(connection.redis_connector.get("foo"))
     while(True):
         command = input('\nType a command (\'list\' to get available commands or \'exit\' to exit): \n\n').split(' ');
-        
+        #try:
         if command[0] == 'list':
             list_all_commands.execute()
         elif command[0] == 'exit':
@@ -48,5 +48,7 @@ if __name__ == '__main__':
         else:
             print('\n\nresult:\n\n');
             command_storage.get_handler(command[0])(command, cursor, conn)
+        #except:
+        #    print("Error executing command! Message: %s. Please, check your input." % sys.exc_info()[1])
         
     
