@@ -1,0 +1,1 @@
+db.testreferences.insert({"name":"John","surname":"Doe",friend:db.testcollection.find({"_id":"killer"}, {"_id":1}).toArray()[0]._id})
