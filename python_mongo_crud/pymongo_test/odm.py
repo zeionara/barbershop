@@ -13,7 +13,7 @@ config = configparser.ConfigParser()
 config.read('C://Users//Zerbs//accounts.sec')
 
 session = ThreadLocalODMSession(
-    bind=create_datastore('mongodb://%s:%s@%s' % (config["mongo"]["login"], 
+    bind = create_datastore('mongodb://%s:%s@%s' % (config["mongo"]["login"], 
                                                   config["mongo"]["password"],
                                                   config["mongo"]["path"]))
 )
@@ -44,11 +44,20 @@ class PremiumTriggers(MapperExtension):
         if (obj.premium_size > premium_size.max) or (obj.premium_size < premium_size.min):
             raise ValueError("Premium size must be between %i and %i" % (premium_size.min,
                                                                          premium_size.max))
+    def before_update(self, obj, st, sess):
+        print("upd")
+        print(obj)
+        
+class WorkerTriggers(MapperExtension):     
+    def before_update(self, obj, st, sess):
+        print("upd")
+        print(obj)
     
 class TWorker(MappedClass, EnhancingClass):
     class __mongometa__:
         session = session
         name = 'testworkers'
+        extensions = [ WorkerTriggers ]
     
     _id = FieldProperty(schema.ObjectId)
     name = FieldProperty(schema.String(required=True))
@@ -58,6 +67,7 @@ class TPremiumSize(MappedClass, EnhancingClass):
     class __mongometa__:
         session = session
         name = 'testpremiumssizes'
+        
     
     _id = FieldProperty(schema.ObjectId)
     name = FieldProperty(schema.String(required=True))
@@ -95,6 +105,13 @@ tpr = TPremium(premium_id = "4e8", worker_id = "4c0",
                earning_date = datetime.datetime(2017, 11, 10), premium_size = 3100,
                note = "the best worker!")
 
+tw.name = "name"
+
 
 session.flush_all()
 
+#tpr = TPremium.query.find().all()
+#print(tpr)
+#tpr.note = "the best of the bests!"
+
+#session.flush_all()
