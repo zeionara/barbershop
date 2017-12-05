@@ -1,7 +1,7 @@
-insert into workers_statuses (name) values ('базовый');
-insert into workers_statuses (name) values ('больничный');
-insert into workers_statuses (name) values ('отпуск');
-select * from workers_statuses;
+insert into workers_states (name) values ('базовый');
+insert into workers_states (name) values ('больничный');
+insert into workers_states (name) values ('отпуск');
+select * from workers_states;
 
 select * from premiums_sizes;
 
@@ -58,8 +58,14 @@ select * from services;
 select table_name, nested from all_tables where nested like 'YES';
 select * from services;
 commit();
+--for nested tables
+select * from table(select RENDERED_SERVICES from QUALIFICATIONS where id = 2);
+insert into table(select RENDERED_SERVICES from QUALIFICATIONS where id = 2) values(..);
+update table(select RENDERED_SERVICES from QUALIFICATIONS where id = 2) set id = 4 where id = 25;
+
+
 insert into qualifications (name, rendered_services) values ('цирюльникс',services_table__(new_service(22)));
-select * from nested_rendered_services;
+
 select * from table(select rendered_services from qualifications where id = (select qualification from workers where id = 2));
 
 select id, person_id, person_status, login, passwd, dbms_lob.getlength(avatar) size_of_avatar_in_bytes from accounts;
