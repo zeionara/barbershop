@@ -41,6 +41,10 @@ class Premium(MappedClass, EnhancingClass):
         session = session
         name = collection_name
         extensions = [PremiumTriggers]
+        custom_indexes = [
+            dict(fields=('premium_id',), unique = False),
+            dict(fields=('worker_id',), unique = False)
+        ]
 
     _id = FieldProperty(schema.ObjectId)
 

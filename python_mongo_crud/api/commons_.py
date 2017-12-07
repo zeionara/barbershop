@@ -1,16 +1,35 @@
 import re
 import datetime
+import configparser
+import redis
+import pickle
+from bson.objectid import ObjectId
+
+config = configparser.ConfigParser()
+config.read('C://Users//Zerbs//accounts.sec')
+
+redis_connection = redis.StrictRedis(host=config['redis']['host'], port=int(config['redis']['port']), db=0)
 
 def get_date(string_date):
     if (isinstance(string_date,datetime.datetime)):
         return string_date
     return datetime.datetime.strptime(string_date, '%d.%m.%Y')
 
+def get_date_time(string_date):
+    if (isinstance(string_date,datetime.datetime)):
+        return string_date
+    return datetime.datetime.strptime(string_date, '%d.%m.%Y %H:%M')
+
 def get(value):
     return value
 
 def get_list(value):
     return value.replace(" ","").split(",")
+
+def get_float(value):
+    if value == None:
+        return None
+    return float(value)
 
 def get_worker_date_state_list(value):
     #value = '12.12.2017,e88 ; 12.11.2017, e89 '
@@ -22,10 +41,17 @@ def get_worker_date_state_list(value):
         result.append([get_date(pair[0]), pair[1]])
     return result
 
-def get_float(value):
-    if value == None:
-        return None
-    return float(value)
+def get_holdings_list(value):
+    #value = 'e88, 100 ;e89, 200 '
+    print(">>>>" + value)
+    result = []
+    pre_result = value.replace(" ","").split(";")
+    for item in pre_result:
+        pair = item.split(",")
+        result.append([pair[0], get_float(pair[1])])
+    return result
+
+
 ##
 def find_next_flag(begin_index, command):
     print(command)
@@ -82,59 +108,64 @@ def get_properties_tuple(item, field_widths, field_names):
             result.append(str(getattr(item, field_names[i])))
     return tuple(result)
 
-def show_entities(command, base_class, field_shorts, field_names, field_widths, field_modifiers):
-    full_set = get_full_set(base_class)
-    result = parse(command, field_shorts)
-
-    params = get_params(result, field_shorts)
-
-    for i in range(len(params)):
-        if (params[i] != None):
-            intermediate_set = []
-            for item in full_set:
-                if ((getattr(item, field_names[i]) == field_modifiers[i](params[i])) and (i > 0)) or \
-                    ((str(getattr(item, field_names[i]))[-len(params[i]):] == params[i]) and (i == 0)):
-                    intermediate_set.append(item)
-            full_set = intermediate_set
-
-    stre = get_stre(field_widths)
-    print(field_names)
-    print(stre % field_names)
-
-    for item in full_set:
-        print(stre % get_properties_tuple(item, field_widths, field_names))
-
 def get_entities(command, base_class, field_shorts, field_names, field_modifiers):
-    full_set = get_full_set(base_class)
+    global redis_connection
+    collection_name = str(base_class).split("'")[1].split(".")[0]
+
+    full_set = []
     result = parse(command, field_shorts)
-
+    ids = []
     params = get_params(result, field_shorts)
+    redis_key = collection_name+"_"+"_".join([str(param) for param in params])
 
-    for i in range(len(params)):
-        print(full_set)
-        if (params[i] != None):
-            intermediate_set = []
-            for item in full_set:
-                if ((getattr(item, field_names[i]) == field_modifiers[i](params[i])) and (i > 0)) or \
-                    ((str(getattr(item, field_names[i]))[-len(params[i]):] == params[i]) and (i == 0)):
-                    intermediate_set.append(item)
-            full_set = intermediate_set
-        print(full_set)
+    got_from_redis = str(redis_connection.get(redis_key+"_valid")) == "b'1'"
+
+    if (got_from_redis):
+        print("got from redis")
+        full_set = base_class.query.find({"_id" : {"$in" : [ ObjectId(_id) for _id in pickle.loads(redis_connection.get(redis_key)) ] }}).all()
+        #for _id in pickle.loads(redis_connection.get(redis_key)):
+        #    full_set.append(base_class.query.find({"_id" : ObjectId(_id)}).first())
+    else:
+        full_set = get_full_set(base_class)
+        for i in range(len(params)):
+            if (params[i] != None):
+                intermediate_set = []
+                for item in full_set:
+                    if ((getattr(item, field_names[i]) == field_modifiers[i](params[i])) and (i > 0)) or \
+                        ((str(getattr(item, field_names[i]))[-len(params[i]):] == params[i]) and (i == 0)):
+                        intermediate_set.append(item)
+                full_set = intermediate_set
+        for item in full_set:
+            ids.append(str(item._id))
+        redis_connection.set(redis_key, pickle.dumps(ids))
+        redis_connection.set(redis_key+"_valid", "1")
 
     return full_set
 
+def show_entities(command, base_class, field_shorts, field_names, field_widths, field_modifiers):
+    stre = get_stre(field_widths)
+    print(stre % field_names)
+    for item in get_entities(command, base_class, field_shorts, field_names, field_modifiers):
+        print(stre % get_properties_tuple(item, field_widths, field_names))
+
+def mark_redis_invalid(base_class):
+    global redis_connection
+    collection_name = str(base_class).split("'")[1].split(".")[0]
+    for key in redis_connection.scan_iter(collection_name+'_*valid'):
+        redis_connection.delete(key)
 ##
 
 def delete(command, base_class, field_shorts, field_names, field_modifiers, session):
+
     for item in get_entities(command, base_class, field_shorts, field_names, field_modifiers):
         item.delete()
 
     session.flush_all()
+    mark_redis_invalid(base_class)
 
 def update(command, base_class, field_shorts, field_names, field_modifiers, session):
     entities = get_entities(command, base_class, field_shorts, field_names, field_modifiers)
     result = parse(command, ["-"+field_short for field_short in field_shorts[1:]])
-
     params = get_params(result,["-"+field_short for field_short in field_shorts[1:]])
     print("-"*40)
     print(params)
@@ -146,6 +177,7 @@ def update(command, base_class, field_shorts, field_names, field_modifiers, sess
                 setattr(item, field_names[i + 1], field_modifiers[ i + 1 ](params[i]))
 
     session.flush_all()
+    mark_redis_invalid(base_class)
 
 def create(command, base_class, field_shorts, field_names, field_modifiers, session):
     result = parse(command, field_shorts)
@@ -158,6 +190,7 @@ def create(command, base_class, field_shorts, field_names, field_modifiers, sess
     print(args)
     new_object = base_class(**args)
     session.flush_all()
+    mark_redis_invalid(base_class)
     return new_object
 
 ##

@@ -11,6 +11,7 @@ import worker_date_states_ as wds
 import salaries_ as s
 import premium_sizes_ as ps
 import premiums_ as pr
+import requests_ as r
 
 
 def get_handler(typed_command):
@@ -80,4 +81,9 @@ commands = sorted((('create_holding','ch', cms.get_create_rules('ch', h.field_st
 ('read_premiums','rpr', cms.get_read_delete_rules('rpr', pr.field_status, pr.field_shorts, pr.field_names, pr.field_descriptions), pr.read),
 ('create_premium','cpr', cms.get_create_rules('cpr',  pr.field_status, pr.field_shorts, pr.field_names, pr.field_descriptions), pr.create),
 ('update_premiums','upr', cms.get_update_rules('upr',  pr.field_status, pr.field_shorts, pr.field_names, pr.field_descriptions), pr.update),
-('delete_premiums','dpr', cms.get_update_rules('dpr',  pr.field_status, pr.field_shorts, pr.field_names, pr.field_descriptions), pr.delete)))
+('delete_premiums','dpr', cms.get_update_rules('dpr',  pr.field_status, pr.field_shorts, pr.field_names, pr.field_descriptions), pr.delete),
+#requests
+('read_requests','rr', cms.get_read_delete_rules('rr', r.field_status, r.field_shorts, r.field_names, r.field_descriptions), r.read),
+('create_request','cr', cms.get_create_rules('cr',  r.field_status, r.field_shorts, r.field_names, r.field_descriptions), r.create),
+('update_requests','ur', cms.get_update_rules('ur',  r.field_status, r.field_shorts, r.field_names, r.field_descriptions), r.update),
+('delete_requests','dr', cms.get_update_rules('dr',  r.field_status, r.field_shorts, r.field_names, r.field_descriptions), r.delete)))

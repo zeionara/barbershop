@@ -1,6 +1,7 @@
 import configparser
 from connection import create_session
 
+import ming
 from ming import schema
 from ming.odm import FieldProperty
 from ming.odm.declarative import MappedClass
@@ -27,6 +28,9 @@ class Contact(MappedClass, EnhancingClass):
     class __mongometa__:
         session = session
         name = collection_name
+        custom_indexes = [
+            dict(fields=('person_id',), unique = False),
+        ]
 
     _id = FieldProperty(schema.ObjectId)
     person_type = PersonTypeProperty()

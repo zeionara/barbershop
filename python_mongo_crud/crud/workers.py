@@ -25,6 +25,10 @@ class Worker(MappedClass, EnhancingClass):
     class __mongometa__:
         session = session
         name = collection_name
+        custom_indexes = [
+            dict(fields=('qualification',), unique = False),
+            dict(fields=('position',), unique = False),
+        ]
 
     _id = FieldProperty(schema.ObjectId)
     name = FieldProperty(schema.String(required=True))

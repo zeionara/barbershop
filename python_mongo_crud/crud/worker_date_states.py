@@ -26,6 +26,9 @@ class WorkerDateStates(MappedClass, EnhancingClass):
     class __mongometa__:
         session = session
         name = collection_name
+        custom_indexes = [
+            dict(fields=('worker_id',), unique = False) 
+        ]
 
     _id = FieldProperty(schema.ObjectId)
     worker_id = StringSingleForeignKeyUniqueProperty(Worker, 'worker_id')
