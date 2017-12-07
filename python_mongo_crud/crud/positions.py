@@ -15,16 +15,16 @@ config.read('C://Users//Zerbs//accounts.sec')
 session = create_session(config['mongo']['login'], config['mongo']['password'], config['mongo']['path'])
 
 class Position(MappedClass, EnhancingClass):
-    
+
     class __mongometa__:
         session = session
         name = collection_name
-    
+
     _id = FieldProperty(schema.ObjectId)
     name = FieldProperty(schema.String(required=True))
-    
+
     description = FieldProperty(schema.String(if_missing = ''))
-    
-position = Position(name = "General hairdresser")
+
+#position = Position(name = "General hairdresser")
 
 session.flush_all()

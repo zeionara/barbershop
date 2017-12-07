@@ -14,6 +14,7 @@ from commons import PersonTypeProperty
 from commons import ContactProperty
 
 from clients import Client
+from workers import Worker
 
 collection_name = 'contacts'
 config = configparser.ConfigParser()
@@ -29,7 +30,7 @@ class Contact(MappedClass, EnhancingClass):
 
     _id = FieldProperty(schema.ObjectId)
     person_type = PersonTypeProperty()
-    person_id = StringForeignKeyProperty([Client], ['client'], 'person_type')
+    person_id = StringForeignKeyProperty([Client, Worker], ['client', 'worker'], 'person_type')
     type = ContactTypeProperty()
     contact = ContactProperty('type')
 

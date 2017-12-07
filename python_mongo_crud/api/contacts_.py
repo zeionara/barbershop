@@ -17,12 +17,6 @@ field_status = (0, 2, 2, 2, 2)
 base_class = contacts.Contact
 session = contacts.session
 
-
-#command = input('\nType a command (\'list\' to get available commands or \'exit\' to exit): \n\n').split(' ')
-######
-
-##########
-
 def create(command):
     cms.create(command, base_class, field_shorts, field_names, field_modifiers, session)
 
