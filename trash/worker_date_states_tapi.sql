@@ -11,6 +11,18 @@ dates in date_arr,
 iid in number
 );
 
+procedure app (
+ids in num_arr,
+dates in date_arr,
+iid in number
+);
+
+procedure del (
+ids in num_arr,
+dates in date_arr,
+iid in number
+);
+
 procedure get(
 ids out num_arr,
 dates out date_arr,
@@ -38,6 +50,57 @@ begin
     update workers_date_states set states = ds where id = iid;
     dbms_output.put_line('ok');
 end;
+
+procedure app (
+ids in num_arr,
+dates in date_arr,
+iid in number
+) is
+ds day_states__;
+begin
+    ds := day_states__(day_state_table__());
+    select states into ds from workers_date_states where id = iid;
+    if ds is null then
+        ds := day_states__(day_state_table__());
+    end if;
+    for i in ids.first .. ids.last loop
+        dbms_output.put_line('ok');
+        ds.day_state_table.extend;
+        ds.day_state_table(ds.day_state_table.count) := new_day_state(dates(i), ids(i));
+    end loop;
+    update workers_date_states set states = ds where id = iid;
+    dbms_output.put_line('ok');
+end;
+
+procedure del (
+ids in num_arr,
+dates in date_arr,
+iid in number
+) is
+ds day_states__;
+ds_old day_states__;
+flag number;
+begin
+    ds := day_states__(day_state_table__());
+    select states into ds_old from workers_date_states where id = iid;
+    if ds is null then
+        ds := day_states__(day_state_table__());
+    end if;
+    <<outer_loop>>
+    for j in ds_old.day_state_table.first .. ds_old.day_state_table.last loop
+        for i in ids.first .. ids.last loop
+            --if ds_old.day_state_table(j).date_ = dates(i) then
+            continue outer_loop when ds_old.day_state_table(j).date_ = dates(i);  
+            --end if;
+            dbms_output.put_line('ok');
+        end loop;
+        ds.day_state_table.extend;
+        ds.day_state_table(ds.day_state_table.count) := ds_old.day_state_table(j);
+    end loop;
+    update workers_date_states set states = ds where id = iid;
+    dbms_output.put_line('ok');
+end;
+
 
 procedure get (
 ids out num_arr,

@@ -80,9 +80,15 @@ commands = sorted((('read_positions','rp', cms.get_read_delete_rules('rp', p.fie
 ('delete_workers','dw', cms.get_update_rules('dw',  w.field_status, w.field_shorts, w.field_names, w.field_descriptions), w.delete),
 #worker date states
 ('read_worker_date_states','rwds', cms.get_read_delete_rules('rwds', wds.field_status, wds.field_shorts, wds.field_names, wds.field_descriptions), wds.read),
-('create_worker_date_states','cwds', cms.get_create_rules('cwds',  wds.field_status, wds.field_shorts, wds.field_names, wds.field_descriptions), wds.create),
-('update_worker_date_states','uwds', cms.get_update_rules('uwds',  wds.field_status, wds.field_shorts, wds.field_names, wds.field_descriptions), wds.update),
-('delete_worker_date_states','dwds', cms.get_update_rules('dwds',  wds.field_status, wds.field_shorts, wds.field_names, wds.field_descriptions), wds.delete),
+('create_worker_date_states','cwds', cms.get_create_rules('cwds',  list(wds.field_status) + list(wds.extra_field_status),
+                                                             list(wds.field_shorts) + list(wds.extra_field_shorts),
+                                                             list(wds.field_names) + list(wds.extra_field_names),
+                                                             list(wds.field_descriptions) +list(wds.extra_field_descriptions)), wds.create),
+('update_worker_date_states','uwds', cms.get_create_rules('uwds',  list(wds.field_status) + list(wds.upd_field_status),
+                                                             list(wds.field_shorts) + list(wds.upd_field_shorts),
+                                                             list(wds.field_names) + list(wds.upd_field_names),
+                                                             list(wds.field_descriptions) +list(wds.upd_field_descriptions)), wds.update),
+('delete_worker_date_states','dwds', cms.get_read_delete_rules('dwds',  wds.field_status, wds.field_shorts, wds.field_names, wds.field_descriptions), wds.delete),
 #salaries
 ('read_salaries','rsl', cms.get_read_delete_rules('rsl', sl.field_status, sl.field_shorts, sl.field_names, sl.field_descriptions), sl.read),
 ('create_salary','csl', cms.get_create_rules('csl',  sl.field_status, sl.field_shorts, sl.field_names, sl.field_descriptions), sl.create),

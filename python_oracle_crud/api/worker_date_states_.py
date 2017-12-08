@@ -29,11 +29,11 @@ extra_field_status = [1]
 
 upd_field_names = ["append_date_states", "delete_date_states"]
 upd_field_widths = [100, 100]
-upd_field_short = ["--ad", "--dd"]
+upd_field_shorts = ["--ad", "--dd"]
 upd_field_descriptions = ["dates and ids of related states to append in format : 12.12.2017,e88 ; 12.11.2017, e89 ",
                           "dates and ids of related states to delete in format : 12.12.2017,e88 ; 12.11.2017, e89 "]
-upd_field_modifiers = [get_worker_date_state_list]
-upd_field_status = [1]
+upd_field_modifiers = [get_worker_date_state_list, get_worker_date_state_list]
+upd_field_status = [1, 1]
 
 def set_date_states(id, date_states):
     db = connection.establish_default()[2]
@@ -100,9 +100,11 @@ def update(command):
     deletings = cms.get_parameter_cmd(command, upd_field_shorts[1])
     appendings = cms.get_parameter_cmd(command, upd_field_shorts[0])
     if deletings != None:
-        delete_date_states(new_ds.id, extra_field_modifiers[1](" ".join(deletings ) ) )
+        for id in ids:
+            delete_date_states(id, upd_field_modifiers[1](" ".join(deletings ) ) )
     if appendings != None:
-        append_date_states(new_ds.id, extra_field_modifiers[0](" ".join(appendings ) ) )
+        for id in ids:
+            append_date_states(id, upd_field_modifiers[0](" ".join(appendings ) ) )
 
 def delete(command):
     cms.delete(command, base_class, field_shorts, field_names, field_modifiers)

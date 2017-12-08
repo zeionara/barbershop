@@ -40,6 +40,7 @@ create or replace type service__ as object (
 
 create or replace type services_table__ as table of service__;
 
+create or replace type num_array__ as table of number;
 --
 --special types
 --

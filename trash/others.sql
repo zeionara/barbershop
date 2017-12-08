@@ -33,6 +33,7 @@ select * from premiums_sizes;
 insert into salaries (worker_id, common, vacation, sick) values (2, 6666.66, 6666.66, 6666.66);
 
 select * from workers;
+select * from workers_date_states;
 select surname, c.name, patronymic, s.name, visit_date_time 
 from (requests r join clients c on r.client_id = c.id) join services s on s.id = r.service_id;
 
@@ -55,15 +56,18 @@ select * from table(select treat(states as day_states__).day_state_table from wo
 --insert to inner table
 delete from workers_date_states;
 select * from services;
+select * from requests;
 select table_name, nested from all_tables where nested like 'YES';
-select * from services;
+select * from qualifications;
 commit();
+select * from workers_date_states;
 --for nested tables
 select * from table(select RENDERED_SERVICES from QUALIFICATIONS where id = 2);
 insert into table(select RENDERED_SERVICES from QUALIFICATIONS where id = 2) values(..);
 update table(select RENDERED_SERVICES from QUALIFICATIONS where id = 2) set id = 4 where id = 25;
 select * from qualifications;
-
+select * from services;
+select count(*) from services where id = '33';
 insert into qualifications (name, rendered_services) values ('цирюльникс',services_table__(new_service(22)));
 
 select * from table(select rendered_services from qualifications where id = (select qualification from workers where id = 2));
