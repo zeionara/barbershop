@@ -62,7 +62,7 @@ commit();
 select * from table(select RENDERED_SERVICES from QUALIFICATIONS where id = 2);
 insert into table(select RENDERED_SERVICES from QUALIFICATIONS where id = 2) values(..);
 update table(select RENDERED_SERVICES from QUALIFICATIONS where id = 2) set id = 4 where id = 25;
-
+select * from qualifications;
 
 insert into qualifications (name, rendered_services) values ('цирюльникс',services_table__(new_service(22)));
 

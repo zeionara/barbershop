@@ -39,7 +39,7 @@ create table qualifications(
 )nested table rendered_services store as nested_rendered_services;
 alter table nested_rendered_services add constraint unique_nested_services_id unique(id);
 /
-
+--alter table nested_rendered_services drop constraint unique_nested_services_id;
 
 --update workers - DROP TABLE workers CASCADE CONSTRAINTS; 
 --basic data about workers of the barbershop

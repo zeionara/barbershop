@@ -230,7 +230,7 @@ def get_read_delete_rules(cmd, field_status, field_shorts, field_names, field_de
 
 def get_update_rules(cmd, field_status, field_shorts, field_names, field_descriptions):
     cmd = ""
-    for i in range(len(field_status)):
+    for i in range(len(field_shorts)):
         if field_status[i] == 0:
             continue
         cmd += "\n\t"

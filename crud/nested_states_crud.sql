@@ -86,3 +86,21 @@ end NESTED_STATES_tapi;
 --    dbms_output.put_line('Generated id: ' || insert_id);
 --
 --end;
+
+---
+
+
+
+-- declare
+--    insert_id  HOLDINGS.ID%TYPE;
+--begin
+--	HOLDINGS_TAPI.INS(
+--    P_PRICE => 30,
+--    P_QUANTITY => 3,
+--    P_ID => insert_id,
+--    P_NAME => 'заколка'
+--  );
+--
+--    dbms_output.put_line('Generated id: ' || insert_id);
+--
+--end;

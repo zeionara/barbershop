@@ -5,7 +5,7 @@ import worker_states_ as ws
 import positions_ as p
 import clients_ as cl
 import services_ as s
-#import qualifications_ as q
+import qualifications_ as q
 import workers_ as w
 #import worker_date_states_ as wds
 import salaries_ as sl
@@ -52,10 +52,26 @@ commands = sorted((('read_positions','rp', cms.get_read_delete_rules('rp', p.fie
 ('update_services','us', cms.get_update_rules('us',  s.field_status, s.field_shorts, s.field_names, s.field_descriptions), s.update),
 ('delete_services','ds', cms.get_update_rules('ds',  s.field_status, s.field_shorts, s.field_names, s.field_descriptions), s.delete),
 #qualifications
-#('read_qualifications','rq', cms.get_read_delete_rules('rq', q.field_status, q.field_shorts, q.field_names, q.field_descriptions), q.read),
-#('create_qualification','cq', cms.get_create_rules('cq',  q.field_status, q.field_shorts, q.field_names, q.field_descriptions), q.create),
-#('update_qualifications','uq', cms.get_update_rules('uq',  q.field_status, q.field_shorts, q.field_names, q.field_descriptions), q.update),
-#('delete_qualifications','dq', cms.get_update_rules('dq',  q.field_status, q.field_shorts, q.field_names, q.field_descriptions), q.delete)))
+('read_qualifications','rq', cms.get_read_delete_rules('rq', list(q.field_status) + list(q.extra_field_status),
+                                                             list(q.field_shorts) + list(q.extra_field_shorts),
+                                                             list(q.field_names) + list(q.extra_field_names),
+                                                             list(q.field_descriptions) +list(q.extra_field_descriptions)),
+                                                             q.read),
+('create_qualification','cq', cms.get_create_rules('cq',  list(q.field_status) + list(q.extra_field_status),
+                                                             list(q.field_shorts) + list(q.extra_field_shorts),
+                                                             list(q.field_names) + list(q.extra_field_names),
+                                                             list(q.field_descriptions) +list(q.extra_field_descriptions)),
+                                                          q.create),
+('update_qualifications','uq', cms.get_update_rules('uq',  list(q.field_status) + list(q.extra_field_status),
+                                                             list(q.field_shorts) + list(q.extra_field_shorts),
+                                                             list(q.field_names) + list(q.extra_field_names),
+                                                             list(q.field_descriptions) +list(q.extra_field_descriptions)),
+                                                           q.update),
+('delete_qualifications','dq', cms.get_update_rules('dq',  list(q.field_status) + list(q.extra_field_status),
+                                                             list(q.field_shorts) + list(q.extra_field_shorts),
+                                                             list(q.field_names) + list(q.extra_field_names),
+                                                             list(q.field_descriptions) +list(q.extra_field_descriptions)),
+                                                           q.delete),
 #workers
 ('read_workers','rw', cms.get_read_delete_rules('rw', w.field_status, w.field_shorts, w.field_names, w.field_descriptions), w.read),
 ('create_worker','cw', cms.get_create_rules('cw', tuple(list(w.field_status) + [2]), tuple(list(w.field_shorts) + ["-ph"]),
