@@ -189,6 +189,7 @@ def update(command, base_class, field_shorts, field_names, field_modifiers):
                 setattr(item, field_names[i + 1], field_modifiers[ i + 1 ](params[i]))
 
     mark_redis_invalid(base_class)
+    return [item.id for item in entities]
 
 def create(command, base_class, field_shorts, field_names, field_modifiers):
     result = parse(command, field_shorts)

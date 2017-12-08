@@ -1,0 +1,63 @@
+create or replace package requests_holdings_tapi
+is
+
+type num_arr IS TABLE OF NUMBER INDEX BY PLS_INTEGER;
+
+procedure ins (
+ids in num_arr,
+quantities in num_arr,
+iid in number
+);
+
+procedure get(
+ids out num_arr,
+quantities out num_arr,
+iid in number
+);
+
+end requests_holdings_tapi;
+/
+create or replace package body requests_holdings_tapi
+is
+-- insert
+procedure ins (
+ids in num_arr,
+quantities in num_arr,
+iid in number
+) is
+ht holdings_table__;
+begin
+    ht := holdings_table__();
+    for i in ids.first .. ids.last loop
+        dbms_output.put_line('ok');
+        ht.extend;
+        ht(ht.count) := new_holding(ids(i), quantities(i));
+    end loop;
+    update requests set holdings = ht where id = iid;
+    dbms_output.put_line('ok');
+end;
+
+procedure get (
+ids out num_arr,
+quantities out num_arr,
+iid in number
+) is
+ht holdings_table__;
+parr num_arr;
+begin
+    --parr := num_arr();
+    ht := holdings_table__();
+    select holdings into ht from requests where id = iid;
+    if ht is not null then
+        for i in ht.first .. ht.last loop
+            dbms_output.put_line('ok');
+            --parr.extend;
+            ids(i) := ht(i).id;
+            quantities(i) := ht(i).quantity;
+        end loop;
+    end if;
+    dbms_output.put_line('ok');
+end;
+
+end requests_holdings_tapi;
+/

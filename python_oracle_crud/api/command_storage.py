@@ -7,11 +7,11 @@ import clients_ as cl
 import services_ as s
 import qualifications_ as q
 import workers_ as w
-#import worker_date_states_ as wds
+import worker_date_states_ as wds
 import salaries_ as sl
 import premium_sizes_ as ps
 import premiums_ as pr
-#import requests_ as r
+import requests_ as r
 
 
 def get_handler(typed_command):
@@ -79,10 +79,10 @@ commands = sorted((('read_positions','rp', cms.get_read_delete_rules('rp', p.fie
 ('update_workers','uw', cms.get_update_rules('uw',  w.field_status, w.field_shorts, w.field_names, w.field_descriptions), w.update),
 ('delete_workers','dw', cms.get_update_rules('dw',  w.field_status, w.field_shorts, w.field_names, w.field_descriptions), w.delete),
 #worker date states
-#('read_worker_date_states','rwds', cms.get_read_delete_rules('rwds', wds.field_status, wds.field_shorts, wds.field_names, wds.field_descriptions), wds.read),
-#('create_worker_date_states','cwds', cms.get_create_rules('cwds',  wds.field_status, wds.field_shorts, wds.field_names, wds.field_descriptions), wds.create),
-#('update_worker_date_states','uwds', cms.get_update_rules('uwds',  wds.field_status, wds.field_shorts, wds.field_names, wds.field_descriptions), wds.update),
-#('delete_worker_date_states','dwds', cms.get_update_rules('dwds',  wds.field_status, wds.field_shorts, wds.field_names, wds.field_descriptions), wds.delete),
+('read_worker_date_states','rwds', cms.get_read_delete_rules('rwds', wds.field_status, wds.field_shorts, wds.field_names, wds.field_descriptions), wds.read),
+('create_worker_date_states','cwds', cms.get_create_rules('cwds',  wds.field_status, wds.field_shorts, wds.field_names, wds.field_descriptions), wds.create),
+('update_worker_date_states','uwds', cms.get_update_rules('uwds',  wds.field_status, wds.field_shorts, wds.field_names, wds.field_descriptions), wds.update),
+('delete_worker_date_states','dwds', cms.get_update_rules('dwds',  wds.field_status, wds.field_shorts, wds.field_names, wds.field_descriptions), wds.delete),
 #salaries
 ('read_salaries','rsl', cms.get_read_delete_rules('rsl', sl.field_status, sl.field_shorts, sl.field_names, sl.field_descriptions), sl.read),
 ('create_salary','csl', cms.get_create_rules('csl',  sl.field_status, sl.field_shorts, sl.field_names, sl.field_descriptions), sl.create),
@@ -97,9 +97,21 @@ commands = sorted((('read_positions','rp', cms.get_read_delete_rules('rp', p.fie
 ('read_premiums','rpr', cms.get_read_delete_rules('rpr', pr.field_status, pr.field_shorts, pr.field_names, pr.field_descriptions), pr.read),
 ('create_premium','cpr', cms.get_create_rules('cpr',  pr.field_status, pr.field_shorts, pr.field_names, pr.field_descriptions), pr.create),
 ('update_premiums','upr', cms.get_update_rules('upr',  pr.field_status, pr.field_shorts, pr.field_names, pr.field_descriptions), pr.update),
-('delete_premiums','dpr', cms.get_update_rules('dpr',  pr.field_status, pr.field_shorts, pr.field_names, pr.field_descriptions), pr.delete)))
+('delete_premiums','dpr', cms.get_update_rules('dpr',  pr.field_status, pr.field_shorts, pr.field_names, pr.field_descriptions), pr.delete),
 #requests
-#('read_requests','rr', cms.get_read_delete_rules('rr', r.field_status, r.field_shorts, r.field_names, r.field_descriptions), r.read),
-#('create_request','cr', cms.get_create_rules('cr',  r.field_status, r.field_shorts, r.field_names, r.field_descriptions), r.create),
-#('update_requests','ur', cms.get_update_rules('ur',  r.field_status, r.field_shorts, r.field_names, r.field_descriptions), r.update),
-#('delete_requests','dr', cms.get_update_rules('dr',  r.field_status, r.field_shorts, r.field_names, r.field_descriptions), r.delete)))
+('read_requests','rr', cms.get_read_delete_rules('rr', list(r.field_status) + list(r.extra_field_status),
+                                                             list(r.field_shorts) + list(r.extra_field_shorts),
+                                                             list(r.field_names) + list(r.extra_field_names),
+                                                             list(r.field_descriptions) +list(r.extra_field_descriptions)), r.read),
+('create_request','cr', cms.get_create_rules('cr',  list(r.field_status) + list(r.extra_field_status),
+                                                             list(r.field_shorts) + list(r.extra_field_shorts),
+                                                             list(r.field_names) + list(r.extra_field_names),
+                                                             list(r.field_descriptions) +list(r.extra_field_descriptions)), r.create),
+('update_requests','ur', cms.get_update_rules('ur',  list(r.field_status) + list(r.extra_field_status),
+                                                             list(r.field_shorts) + list(r.extra_field_shorts),
+                                                             list(r.field_names) + list(r.extra_field_names),
+                                                             list(r.field_descriptions) +list(r.extra_field_descriptions)), r.update),
+('delete_requests','dr', cms.get_update_rules('dr',  list(r.field_status) + list(r.extra_field_status),
+                                                             list(r.field_shorts) + list(r.extra_field_shorts),
+                                                             list(r.field_names) + list(r.extra_field_names),
+                                                             list(r.field_descriptions) +list(r.extra_field_descriptions)), r.delete)))

@@ -42,13 +42,15 @@ st services_table__;
 parr num_arr;
 begin
     --parr := num_arr();
-    --st := services_table__();
-    --select rendered_services into st from qualifications where id = iid;
-    --for i in st.first .. st.last loop
-    --    dbms_output.put_line('ok');
-        --parr.extend;
-    --   arr(i) := st(i).id;
-    --end loop;
+    st := services_table__();
+    select rendered_services into st from qualifications where id = iid;
+    if st is not null then
+        for i in st.first .. st.last loop
+            dbms_output.put_line('ok');
+            --parr.extend;
+            arr(i) := st(i).id;
+        end loop;
+    end if;
     dbms_output.put_line('ok');
 end;
 

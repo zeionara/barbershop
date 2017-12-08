@@ -107,6 +107,10 @@ CREATE OR REPLACE FUNCTION is_states_valid(states day_states__) RETURN boolean i
 cnt int;
 day_state_table day_state_table__;
 BEGIN
+    if states is null then
+        return true;
+    end if;
+
     day_state_table := states.day_state_table;
     for i in day_state_table.first .. day_state_table.last loop
         select count(*) into cnt from workers_states where id = day_state_table(i).state_code;
@@ -159,7 +163,7 @@ CREATE OR REPLACE FUNCTION new_service(id_ int) RETURN service__ is
 cnt int;
 service_tmp service__;
 BEGIN
-    select count(*) into cnt from services where id = id_;
+    select count(*) into cnt from services where id = 1;
     if (cnt = 0) then
         raise_application_error(-20101, 'The service id is invalid');
         rollback;
