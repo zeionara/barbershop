@@ -12,7 +12,7 @@ insert into table(select treat(states as day_states__).day_state_table from work
 
 
 
-
+/
 create or replace package nest_day_states_tapi
 is
 -- insert

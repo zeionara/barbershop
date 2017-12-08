@@ -8,6 +8,7 @@ declare
 end; 
 --(https://asktom.oracle.com/pls/apex/asktom.search?tag=nested-table-20010812) 
 
+/
 create or replace package nest_holdings_tapi
 is
 
@@ -16,7 +17,7 @@ procedure ins (request_id REQUESTS.ID%type,  holdings_id HOLDINGS.ID%type, holdi
 --delete
 procedure del (request_id REQUESTS.ID%type,  holdings_id HOLDINGS.ID%type);
 --update
-procedure upd(request_id REQUESTS.ID%type, new_holdings_id HOLDINGS.ID%type, new_holdings_quantity HOLDINGS.QUANTITY%type);
+procedure upd(request_id REQUESTS.ID%type, old_holdings_id HOLDINGS.ID%type, new_holdings_id HOLDINGS.ID%type, new_holdings_quantity HOLDINGS.QUANTITY%type);
 
 end nest_holdings_tapi;
 
@@ -36,17 +37,19 @@ begin
 end;
 
 --update
-procedure upd(request_id REQUESTS.ID%type, new_holdings_id HOLDINGS.ID%type, new_holdings_quantity HOLDINGS.QUANTITY%type) is 
+procedure upd(request_id REQUESTS.ID%type, old_holdings_id HOLDINGS.ID%type, new_holdings_id HOLDINGS.ID%type, new_holdings_quantity HOLDINGS.QUANTITY%type) is 
 begin
-	update requests 
-	set holdings = holdings_table__(holding__(new_holdings_id,new_holdings_quantity)) 
-	where id = request_id; 
+	update table(select holdings from requests where id = request_id) 
+	set id =  new_holdings_id, quantity =  new_holdings_quantity
+	where id = old_holdings_id; 
 end;
 
 end nest_holdings_tapi;
 /
 
-
+------------
+update table(select RENDERED_SERVICES from QUALIFICATIONS where id = qualification_id) set id = new_service_id where id = old_service_id;
+------------
 
 --usage
 --insert
@@ -81,19 +84,24 @@ END;
 --update
 DECLARE
   REQUEST_ID NUMBER;
+  OLD_HOLDINGS_ID NUMBER;
   NEW_HOLDINGS_ID NUMBER;
   NEW_HOLDINGS_QUANTITY NUMBER;
 BEGIN
   REQUEST_ID := 1;
-  NEW_HOLDINGS_ID := 1;
-  NEW_HOLDINGS_QUANTITY := 12;
+  OLD_HOLDINGS_ID := 7;
+  NEW_HOLDINGS_ID := 10;
+  NEW_HOLDINGS_QUANTITY := 100;
 
   NEST_HOLDINGS_TAPI.UPD(
     REQUEST_ID => REQUEST_ID,
+    OLD_HOLDINGS_ID => OLD_HOLDINGS_ID,
     NEW_HOLDINGS_ID => NEW_HOLDINGS_ID,
     NEW_HOLDINGS_QUANTITY => NEW_HOLDINGS_QUANTITY
   );
+--rollback; 
 END;
+
 
 
 
