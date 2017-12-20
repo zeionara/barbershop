@@ -3,12 +3,16 @@ import datetime
 import configparser
 import redis
 import pickle
+import pymongo
+from bson.objectid import ObjectId
 from serializer import MappedClassJSONEncoder
+from connection import create_db_connection
 
 config = configparser.ConfigParser()
 config.read('C://Users//Zerbs//accounts.sec')
 
 redis_key_delimiter = "_"
+client = create_db_connection(config["mongo"]["login"], config["mongo"]["password"], config["mongo"]["path"])
 
 redis_connection = redis.StrictRedis(host=config['redis']['host'], port=int(config['redis']['port']), db=0)
 
@@ -102,6 +106,13 @@ def get_full_set(base_class):
     return base_class.query.find().all()
 
 def get_ids_set(base_class, field_names, field_modifiers, params):
+
+    #client = pymongo.MongoClient('mongodb://%s:%s@%s' % (config["mongo"]["login"],
+    #                                               config["mongo"]["password"],
+    #                                               config["mongo"]["path"]))
+
+    db = client.barbershopdb
+
     args = {}
     for i in range(len(field_names)):
         if (params[i] != None):
@@ -109,8 +120,10 @@ def get_ids_set(base_class, field_names, field_modifiers, params):
                 args[field_names[i]] = params[i]
             else:
                 args[field_names[i]] = field_modifiers[i](params[i])
+
+    return [str(item["_id"]) for item in db['holdings'].find(args, {"_id":1})]
     #print(base_class.query.get(**args))
-    return [str(item._id) for item in base_class.query.find(args).all()]
+    #return [str(item._id) for item in base_class.query.find(args).all()]
 
     #return base_class.query.find().all()
 
@@ -132,9 +145,9 @@ def get_full_properties_tuple(item, field_names):
 def get_object(field_names, field_values, field_modifiers, base_class):
     args = {}
     for i in range(len(field_names)):
-        #print(field_names[i])
         args[field_names[i]] = field_modifiers[i](field_values[i])
-    return base_class(**args)
+    return base_class.query.get(_id = ObjectId(field_values[0]))
+    #return base_class(**args)
 
 def get_entities(command, base_class, field_shorts, field_names, field_modifiers):
     global redis_connection
@@ -156,16 +169,23 @@ def get_entities(command, base_class, field_shorts, field_names, field_modifiers
     else:
         unpacked = get_ids_set(base_class, field_names, field_modifiers, params)
         redis_connection.set(redis_key, pickle.dumps(unpacked))
+    pipe = redis_connection.pipeline()
+    item_keys = []
     for item_id in unpacked:
         item_key = collection_name + redis_key_delimiter + item_id
+        item_keys.append(item_key)
         item_params = redis_connection.get(item_key)
-        if (item_params != None):
-            new_objectss = get_object(field_names, pickle.loads(item_params), field_modifiers, base_class)
+        pipe.get(item_key)
+    item_params_set = pipe.execute()
+    for i in range(len(unpacked)):
+        if (item_params_set[i] != None):
+            new_objectss = get_object(field_names, pickle.loads(item_params_set[i]), field_modifiers, base_class)
             full_set.append(new_objectss)
         else:
-            right_item = base_class.query.find({"_id" : ObjectId(item_id)}).first()
+            right_item = base_class.query.get(_id = ObjectId(unpacked[i]))
             full_set.append(right_item)
-            redis_connection.set(item_key, pickle.dumps(get_full_properties_tuple(right_item, field_names)))
+            redis_connection.set(item_keys[i], pickle.dumps(get_full_properties_tuple(right_item, field_names)))
+    #print([str(item,"utf-8") for item in pipe.execute()])
     return full_set
 
 def show_entities(command, base_class, field_shorts, field_names, field_widths, field_modifiers):
