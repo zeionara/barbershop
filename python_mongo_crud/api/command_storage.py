@@ -24,7 +24,7 @@ print(list(cl.field_status))
 commands = sorted((('create_holding','ch', cms.get_create_rules('ch', h.field_status, h.field_shorts, h.field_names, h.field_descriptions), h.create),
 ('read_holding','rh', cms.get_read_delete_rules('rh', h.field_status, h.field_shorts, h.field_names, h.field_descriptions), h.read),
 ('update_holding','uh', cms.get_update_rules('uh', h.field_status, h.field_shorts, h.field_names, h.field_descriptions), h.read),
-('delete_holding','dh', cms.get_read_delete_rules('dh', h.field_status, h.field_shorts, h.field_names, h.field_descriptions), h.read),
+('delete_holding','dh', cms.get_read_delete_rules('dh', h.field_status, h.field_shorts, h.field_names, h.field_descriptions), h.delete),
 #contacts
 ('read_contacts','rc', cms.get_read_delete_rules('rc', c.field_status, c.field_shorts, c.field_names, c.field_descriptions), c.read),
 ('create_contact','cc', cms.get_create_rules('cc', c.field_status, c.field_shorts, c.field_names, c.field_descriptions), c.create),
