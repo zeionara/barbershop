@@ -39,7 +39,7 @@ commands = sorted((('read_positions','rp', cms.get_read_delete_rules('rp', p.fie
 ('create_holding','ch', cms.get_create_rules('ch', h.field_status, h.field_shorts, h.field_names, h.field_descriptions), h.create),
 ('read_holding','rh', cms.get_read_delete_rules('rh', h.field_status, h.field_shorts, h.field_names, h.field_descriptions), h.read),
 ('update_holding','uh', cms.get_update_rules('uh', h.field_status, h.field_shorts, h.field_names, h.field_descriptions), h.update),
-('delete_holding','dh', cms.get_read_delete_rules('dh', h.field_status, h.field_shorts, h.field_names, h.field_descriptions), h.read),
+('delete_holding','dh', cms.get_read_delete_rules('dh', h.field_status, h.field_shorts, h.field_names, h.field_descriptions), h.delete),
 #clients
 ('read_clients','rcl', cms.get_read_delete_rules('rcl', cl.field_status, cl.field_shorts, cl.field_names, cl.field_descriptions), cl.read),
 ('create_client','ccl', cms.get_create_rules('ccl', tuple(list(cl.field_status) + [2]), tuple(list(cl.field_shorts) + ["-ph"]),

@@ -16,6 +16,8 @@ field_modifiers = (get, get, get_float, get_float)
 field_status = (0, 2, 2, 2)
 base_class = holdings.Holdings
 
+cms.mark_redis_invalid(base_class)
+
 def create(command):
     cms.create(command, base_class, field_shorts, field_names, field_modifiers)
 

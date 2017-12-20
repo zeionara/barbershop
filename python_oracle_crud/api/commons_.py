@@ -113,12 +113,21 @@ def get_full_set(base_class):
     return base_class.query.find().all()
 
 def get_properties_tuple(item, field_widths, field_names):
+    #print(item)
+    #print(field_widths)
+    #print(field_names)
     result = []
     for i in range(len(field_widths)):
         if len(str(getattr(item, field_names[i]))) > field_widths[i]:
             result.append(str(getattr(item, field_names[i]))[:field_widths[i]-5] + "...")
         else:
             result.append(str(getattr(item, field_names[i])))
+    return tuple(result)
+
+def get_full_properties_tuple(item, field_names):
+    result = []
+    for i in range(len(field_names)):
+        result.append(str(getattr(item, field_names[i])))
     return tuple(result)
 
 def get_filter(params, field_names):
@@ -140,12 +149,26 @@ def get_entities(command, base_class, field_shorts, field_names, field_modifiers
     params = get_params(result, field_shorts)
     redis_key = collection_name+"_"+"_".join([str(param) for param in params])
 
-    got_from_redis = str(redis_connection.get(redis_key+"_valid")) == "b'1'"
+    got_from_redis = redis_connection.get(redis_key)
 
-    if (got_from_redis):
+    if (got_from_redis != None):
+        result = [];
         print("got from redis")
+
         with db_session:
-            result = pickle.loads(redis_connection.get(redis_key))
+            unpacked = pickle.loads(got_from_redis)
+            print(unpacked)
+            for item_id in unpacked:
+                item_key = collection_name + "_" + item_id
+                item = redis_connection.get(item_key)
+                if (item != None):
+                    result.append(pickle.loads(item))
+                else:
+                    right_item = base_class.select(lambda obj: obj.id == item_id)[:][0]
+                    result.append(right_item)
+                    redis_connection.set(item_key, pickle.dumps(right_item))
+
+            #result = pickle.loads(redis_connection.get(redis_key))
     else:
         filter = get_filter(params, field_names)
         with db_session:
@@ -153,8 +176,16 @@ def get_entities(command, base_class, field_shorts, field_names, field_modifiers
                 result = base_class.select()[:]
             else:
                 result = base_class.select().filter(raw_sql(filter))[:]
-        redis_connection.set(redis_key, pickle.dumps(result))
-        redis_connection.set(redis_key+"_valid", "1")
+        #print("".join(params))
+        item_ids = []
+        for item in result:
+            item_id = get_properties_tuple(item, [10 for i in range(len(field_names))], field_names)[0]
+            item_ids.append(item_id)
+            #item_key = collection_name + "_" + item_id
+            #if (redis_connection.get(item_key) == None):
+            #    redis_connection.set(redis_key, pickle.dumps(item))
+        redis_connection.set(redis_key, pickle.dumps(item_ids))
+        #redis_connection.set(redis_key+"_valid", "1")
     return result
 
 def show_entities(command, base_class, field_shorts, field_names, field_widths, field_modifiers):
@@ -167,15 +198,98 @@ def mark_redis_invalid(base_class):
     global redis_connection
     global prefix
     collection_name = prefix + str(base_class).split("'")[1].split(".")[0]
-    for key in redis_connection.scan_iter(collection_name+'_*valid'):
+    #for key in redis_connection.scan_iter(collection_name+'_*valid'):
+    #    redis_connection.delete(key)
+    for key in redis_connection.scan_iter(collection_name+"*"):
+        print(key)
         redis_connection.delete(key)
+
+def check_universal(params):
+    for param in params:
+        if param != "None":
+            return False
+    return True
+
+def mark_redis_invalid_enhanced(base_class, redis_key, entities, collection_name, field_names):
+    global redis_connection
+    global prefix
+
+    collection_name = prefix + str(base_class).split("'")[1].split(".")[0]
+    modified_key_params = str(redis_key)[2:].split("_")[2:]
+
+    if not check_universal(modified_key_params):
+        for item in entities:
+            item_id = get_properties_tuple(item, [10 for i in range(len(field_names))], field_names)[0]
+            item_key = collection_name + "_" + item_id
+            redis_connection.delete(item_key)
+
+    for key in redis_connection.scan_iter(collection_name+"*_*_*"):
+        current_key_params = str(key)[2:-1].split("_")[2:]
+        if check_universal(current_key_params) and not check_universal(modified_key_params):
+            redis_connection.delete(key)
+            continue
+        for i in range(len(modified_key_params)):
+            if (modified_key_params[i] != "None") and (current_key_params[i+1] != "None"):
+                redis_connection.delete(key)
+                break
+
+def mark_redis_invalid_ins(base_class, modified_key_params, collection_name, field_names):
+    global redis_connection
+    global prefix
+
+    collection_name = prefix + str(base_class).split("'")[1].split(".")[0]
+
+    for key in redis_connection.scan_iter(collection_name+"*_*_*"):
+        current_key_params = str(key)[2:-1].split("_")[2:]
+        if check_universal(current_key_params):
+            redis_connection.delete(key)
+            continue
+        broken = False
+        for i in range(len(modified_key_params)):
+            if (current_key_params[i+1] != "None") and (current_key_params[i+1] != modified_key_params[i]):
+                broken = True
+                break
+
+        if not broken:
+            redis_connection.delete(key)
+
+def mark_redis_invalid_del(base_class, deleted_items, collection_name, field_names):
+    global redis_connection
+    global prefix
+
+    collection_name = prefix + str(base_class).split("'")[1].split(".")[0]
+    redis_keys = redis_connection.scan_iter(collection_name+"*_*_*")
+
+    for item in deleted_items:
+        modified_key_params = get_full_properties_tuple(item, field_names)
+        for key in redis_keys:
+            current_key_params = str(key)[2:-1].split("_")[2:]
+            if check_universal(current_key_params):
+                redis_connection.delete(key)
+                continue
+            broken = False
+            for i in range(len(modified_key_params)):
+                if (current_key_params[i+1] != "None") and (current_key_params[i+1] != modified_key_params[i]):
+                    broken = True
+                    break
+
+            if not broken:
+                redis_connection.delete(key)
+
 ##
 
 def delete(command, base_class, field_shorts, field_names, field_modifiers):
+    collection_name = prefix+str(base_class).split("'")[1].split(".")[0]
     with db_session:
-        for item in get_entities(command, base_class, field_shorts, field_names, field_modifiers):
-            item.delete()
-    mark_redis_invalid(base_class)
+        entities = get_entities(command, base_class, field_shorts, field_names, field_modifiers)
+        mark_redis_invalid_del(base_class, entities, collection_name, field_names)
+        #for item in entities:
+            #params = get_full_properties_tuple(item, field_names)
+
+            #item.delete()
+
+    #mark_redis_invalid_enhanced(base_class, redis_key, entities, collection_name, field_names)
+    #mark_redis_invalid(base_class)
 
 @db_session
 def update(command, base_class, field_shorts, field_names, field_modifiers):
@@ -183,26 +297,43 @@ def update(command, base_class, field_shorts, field_names, field_modifiers):
     result = parse(command, ["-"+field_short for field_short in field_shorts[1:]])
     params = get_params(result,["-"+field_short for field_short in field_shorts[1:]])
 
+    collection_name = prefix+str(base_class).split("'")[1].split(".")[0]
+    result_of_selection = parse(command, field_shorts)
+    params_of_selection = get_params(result_of_selection, field_shorts)
+    #redis_key = collection_name+"_"+"_".join([str(param) for param in params_of_selection])
+    #print(params)
+    redis_key = collection_name+"_"+"_".join([str(param) for param in params])
+    #print(redis_key)
+
+
+
     for i in range(len(params)):
         if (params[i] != None):
             for item in entities:
                 setattr(item, field_names[i + 1], field_modifiers[ i + 1 ](params[i]))
 
-    mark_redis_invalid(base_class)
+    mark_redis_invalid_enhanced(base_class, redis_key, entities, collection_name, field_names)
     return [item.id for item in entities]
 
 def create(command, base_class, field_shorts, field_names, field_modifiers):
     result = parse(command, field_shorts)
     args = {}
+    collection_name = prefix+str(base_class).split("'")[1].split(".")[0]
     #print(result)
+    params = []
     for i in range(len(field_names) - 1):
+        params.append(str(get_joined_value(result, field_shorts[ i + 1], " ")))
         if field_modifiers[ i + 1](get_joined_value(result, field_shorts[ i + 1], " ")) == None:
             continue;
         args[field_names[i + 1]] = field_modifiers[ i + 1](get_joined_value(result, field_shorts[ i + 1], " "))
     #print(args)
+    redis_key = collection_name+"_"+"_".join([str(param) for param in params])
+    print(params)
     with db_session:
         new_object = base_class(**args)
-    mark_redis_invalid(base_class)
+
+    mark_redis_invalid_ins(base_class, params, collection_name, field_names)
+    #mark_redis_invalid(base_class)
     return new_object
 
 ##
