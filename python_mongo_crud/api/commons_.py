@@ -10,11 +10,15 @@ from connection import create_db_connection
 
 config = configparser.ConfigParser()
 config.read('C://Users//Zerbs//accounts.sec')
+time_prefix = "timemong"
 
 redis_key_delimiter = "_"
 client = create_db_connection(config["mongo"]["login"], config["mongo"]["password"], config["mongo"]["path"])
 
 redis_connection = redis.StrictRedis(host=config['redis']['host'], port=int(config['redis']['port']), db=0)
+
+def write_time_to_redis(key):
+    redis_connection.set(time_prefix + redis_key_delimiter + key, pickle.dumps(datetime.datetime.now()))
 
 def get_date(string_date):
     if (isinstance(string_date,datetime.datetime)):
@@ -169,13 +173,14 @@ def get_entities(command, base_class, field_shorts, field_names, field_modifiers
     else:
         unpacked = get_ids_set(base_class, field_names, field_modifiers, params)
         redis_connection.set(redis_key, pickle.dumps(unpacked))
+        write_time_to_redis(redis_key)
     pipe = redis_connection.pipeline()
     item_keys = []
     for item_id in unpacked:
         item_key = collection_name + redis_key_delimiter + item_id
         item_keys.append(item_key)
-        item_params = redis_connection.get(item_key)
         pipe.get(item_key)
+        write_time_to_redis(item_key)
     item_params_set = pipe.execute()
     for i in range(len(unpacked)):
         if (item_params_set[i] != None):
@@ -185,6 +190,7 @@ def get_entities(command, base_class, field_shorts, field_names, field_modifiers
             right_item = base_class.query.get(_id = ObjectId(unpacked[i]))
             full_set.append(right_item)
             redis_connection.set(item_keys[i], pickle.dumps(get_full_properties_tuple(right_item, field_names)))
+            write_time_to_redis(item_keys[i])
     #print([str(item,"utf-8") for item in pipe.execute()])
     return full_set
 
@@ -214,42 +220,60 @@ def mark_redis_invalid_after_update(base_class, modified_key_params, entities, c
     global prefix
 
     if not check_universal(modified_key_params):
+        item_keys = []
+        pipe = redis_connection.pipeline()
         for item in entities:
             item_id = get_properties_tuple(item, [10 for i in range(len(field_names))], field_names)[0]
             item_key = collection_name + redis_key_delimiter + item_id
-            redis_connection.delete(item_key)
+            item_keys.append(item_key)
+            pipe.get(item_key)
+            write_time_to_redis(item_key)
+
+        item_params_set = pipe.execute()
+        for i in range(len(entities)):
+            if (item_params_set != None):
+                redis_connection.set(item_keys[i], pickle.dumps(get_full_properties_tuple(entities[i], field_names)))
+                write_time_to_redis(item_keys[i])
+            #redis_connection.delete(item_key)
 
     for key in redis_connection.scan_iter(collection_name+"*" + redis_key_delimiter + "*" + redis_key_delimiter + "*"):
-        current_key_params = str(key)[2:-1].split(redis_key_delimiter)[2:]
-        if check_universal(current_key_params) and not check_universal(modified_key_params):
-            redis_connection.delete(key)
-            continue
+        current_key_params = str(key)[2:-1].split(redis_key_delimiter)[1:]
+        #if check_universal(current_key_params) and not check_universal(modified_key_params):
+        #    redis_connection.delete(key)
+        #    continue
         for i in range(len(modified_key_params)):
             if (modified_key_params[i] != "None") and (current_key_params[i+1] != "None"):
                 redis_connection.delete(key)
                 break
 
-def revise_redis_keys(redis_keys, modified_key_params):
+def revise_redis_keys(redis_keys, modified_key_params, append, item_id):
     for key in redis_keys:
         current_key_params = str(key)[1:-1].split(redis_key_delimiter)[1:]
-        if check_universal(current_key_params):
-            redis_connection.delete(key)
-            continue
+        #if check_universal(current_key_params):
+        #    redis_connection.delete(key)
+        #    continue
         broken = False
         for i in range(len(modified_key_params)):
             if (current_key_params[i+1] != "None") and (current_key_params[i+1] != modified_key_params[i]):
                 broken = True
                 break
-        print("IS BROKEN")
         if not broken:
-            redis_connection.delete(key)
+            if append:
+                redis_connection.set(key, pickle.dumps(pickle.loads(redis_connection.get(key)) + [item_id]))
+                write_time_to_redis(key)
+            else:
+                old_list = pickle.loads(redis_connection.get(key))
+                old_list.remove(item_id)
+                redis_connection.set(key, pickle.dumps(old_list))
+                write_time_to_redis(key)
+            #redis_connection.delete(key)
 
-def mark_redis_invalid_after_create(base_class, modified_key_params, collection_name, field_names):
+def mark_redis_invalid_after_create(base_class, modified_key_params, collection_name, field_names, item_id):
     global redis_connection
     global prefix
 
     redis_keys = redis_connection.scan_iter(collection_name+"*" + redis_key_delimiter + "*" + redis_key_delimiter + "*")
-    revise_redis_keys(redis_keys, modified_key_params)
+    revise_redis_keys(redis_keys, modified_key_params, True, item_id)
 
 def mark_redis_invalid_after_delete(base_class, deleted_items, collection_name, field_names):
     global redis_connection
@@ -258,8 +282,9 @@ def mark_redis_invalid_after_delete(base_class, deleted_items, collection_name, 
     redis_keys = redis_connection.scan_iter(collection_name+"*" + redis_key_delimiter + "*" + redis_key_delimiter + "*")
 
     for item in deleted_items:
-        modified_key_params = get_full_properties_tuple(item, field_names)
-        revise_redis_keys(redis_keys, modified_key_params)
+        redis_connection.delete(collection_name + redis_key_delimiter + str(item._id))
+        modified_key_params = get_full_properties_tuple(item, field_names)[1:]
+        revise_redis_keys(redis_keys, modified_key_params, False, str(item._id))
 
 ##
 
@@ -303,7 +328,7 @@ def create(command, base_class, field_shorts, field_names, field_modifiers, sess
     new_object = base_class(**args)
     session.flush_all()
 
-    mark_redis_invalid_after_create(base_class, params, collection_name, field_names)
+    mark_redis_invalid_after_create(base_class, params, collection_name, field_names, str(new_object._id))
     return new_object
 
 ##

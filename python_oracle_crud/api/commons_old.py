@@ -141,6 +141,8 @@ def get_full_properties_tuple(item, field_names):
 def get_id(item, field_name):
     return getattr(item, field_name)
 
+
+
 def get_filter(params, field_names):
     filter = ""
     for i in range(len(params)):
@@ -228,6 +230,36 @@ def check_universal(params):
             return False
     return True
 
+def mark_redis_invalid_after_update(base_class, modified_key_params, entities, collection_name, field_names):
+    global redis_connection
+    global prefix
+
+    if not check_universal(modified_key_params):
+        item_keys = []
+        pipe = redis_connection.pipeline()
+        for item in entities:
+            item_id = get_properties_tuple(item, [10 for i in range(len(field_names))], field_names)[0]
+            item_key = collection_name + redis_key_delimiter + item_id
+            item_keys.append(item_key)
+            pipe.get(item_key)
+            write_time_to_redis(item_key)
+        item_set = pipe.execute()
+        for i in range(len(entities)):
+            if (item_set[i] != None):
+                redis_connection.set(item_keys[i], pickle.dumps(entities[i]))
+                write_time_to_redis(item_keys[i])
+        #redis_connection.delete(item_key)
+
+    for key in redis_connection.scan_iter(collection_name+"*" + redis_key_delimiter + "*" + redis_key_delimiter + "*"):
+        current_key_params = str(key)[2:-1].split(redis_key_delimiter)[2:]
+        #if check_universal(current_key_params) and not check_universal(modified_key_params):
+        #    redis_connection.delete(key)
+        #    continue
+        for i in range(len(modified_key_params)):
+            if (modified_key_params[i] != "None") and (current_key_params[i+1] != "None"):
+                redis_connection.delete(key)
+                break
+
 def revise_redis_keys_update(redis_keys, modified_key_params_before, modified_key_params_after, item_id):
     for key in redis_keys:
         current_key_params = str(key)[2:-1].split(redis_key_delimiter)[2:]
@@ -306,6 +338,11 @@ def mark_redis_invalid_after_update_enhanced(base_class, modified_key_params_bef
     for i in range(len(modified_key_params_after_set)):
         revise_redis_keys_update(redis_keys, modified_key_params_before_set[i], modified_key_params_after_set[i], identifiers[i])
 
+    #for item in deleted_items:
+    #    redis_connection.delete(collection_name + redis_key_delimiter + str(get_id(item, field_names[0])))
+    #    modified_key_params = get_full_properties_tuple(item, field_names)[1:]
+    #    revise_redis_keys(redis_keys, modified_key_params, False, get_id(item, field_names[0]))
+
 ##
 
 def delete(command, base_class, field_shorts, field_names, field_modifiers):
@@ -357,6 +394,23 @@ def update(command, base_class, field_shorts, field_names, field_modifiers):
                 write_time_to_redis(item_keys[i])
 
     mark_redis_invalid_after_update_enhanced(base_class, modified_key_params_before_set, modified_key_params_after_set, identifiers, collection_name, field_names)
+    return [item.id for item in entities]
+
+@db_session
+def update_old(command, base_class, field_shorts, field_names, field_modifiers):
+    entities = get_entities(command, base_class, field_shorts, field_names, field_modifiers)
+    result = parse(command, ["-"+field_short for field_short in field_shorts[1:]])
+    params = get_params(result,["-"+field_short for field_short in field_shorts[1:]])
+
+    collection_name = prefix + redis_key_delimiter + str(base_class).split("'")[1].split(".")[0]
+
+    print(entities)
+    for i in range(len(params)):
+        if (params[i] != None):
+            for item in entities:
+                setattr(item, field_names[i + 1], field_modifiers[ i + 1 ](params[i]))
+    commit()
+    mark_redis_invalid_after_update(base_class, [str(param) for param in params], entities, collection_name, field_names)
     return [item.id for item in entities]
 
 def create(command, base_class, field_shorts, field_names, field_modifiers):
