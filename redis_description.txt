@@ -4,7 +4,7 @@ After getting a query:
 2. According to list of identifiers try to get from redis cached entities (in mongo - get entities from database by it's id), if an entry is not in the cache, send query to the database.
 3. When updating a table, update also entry for every entity which is in the cache, then modify cached lists of identifiers for each query, which makes selection based on changed fields.
 4. When deleting entities from a table, delete also entry for every deleted entity, then delete identifiers of deleted entries from cached lists of identifiers.
-5. When creating entity, add identifier of new entity to lists of identifiers, which must contain it.
+5. When creating entity, cache it, and add identifier of new entity to lists of identifiers, which must contain it.
 
 Every n seconds:
 
