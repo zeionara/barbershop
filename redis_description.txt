@@ -11,3 +11,7 @@ Every n seconds:
 1. Check time of last usage of every redis key. 
 2. If it had been occured earlier than m seconds ago, then delete this key.
 
+Every n seconds (another option):
+
+1. Check time of last usage of every redis key and size of associated entry.
+2. If whole size of entries more than m, then delete excess entries with biggest time interval after last access.

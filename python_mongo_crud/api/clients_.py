@@ -38,4 +38,5 @@ def update(command):
     cms.update(command, base_class, field_shorts, field_names, field_modifiers, session)
 
 def delete(command):
+    print("deleting...")
     cms.delete(command, base_class, field_shorts, field_names, field_modifiers, session)

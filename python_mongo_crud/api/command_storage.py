@@ -45,7 +45,7 @@ commands = sorted((('create_holding','ch', cms.get_create_rules('ch', h.field_st
 ('create_client','ccl', cms.get_create_rules('ccl', tuple(list(cl.field_status) + [2]), tuple(list(cl.field_shorts) + ["-ph"]),
         tuple(list(cl.field_names) + ["phone"]), tuple(list(cl.field_descriptions) + ["phone number"])), cl.create),
 ('update_clients','ucl', cms.get_update_rules('ucl',  cl.field_status, cl.field_shorts, cl.field_names, cl.field_descriptions), cl.update),
-('delete_positions','dcl', cms.get_update_rules('dcl',  cl.field_status, cl.field_shorts, cl.field_names, cl.field_descriptions), cl.delete),
+('delete_clients','dcl', cms.get_update_rules('dcl',  cl.field_status, cl.field_shorts, cl.field_names, cl.field_descriptions), cl.delete),
 #services
 ('read_services','rs', cms.get_read_delete_rules('rs', s.field_status, s.field_shorts, s.field_names, s.field_descriptions), s.read),
 ('create_service','cs', cms.get_create_rules('cs',  s.field_status, s.field_shorts, s.field_names, s.field_descriptions), s.create),

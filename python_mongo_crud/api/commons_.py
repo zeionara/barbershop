@@ -131,7 +131,7 @@ def get_ids_set(base_class, field_names, field_modifiers, params):
             else:
                 args[field_names[i]] = field_modifiers[i](params[i])
 
-    return [str(item["_id"]) for item in db['holdings'].find(args, {"_id":1})]
+    return [str(item["_id"]) for item in db[str(base_class).split("'")[1].split(".")[0]].find(args, {"_id":1})][5:]
     #print(base_class.query.get(**args))
     #return [str(item._id) for item in base_class.query.find(args).all()]
 
@@ -178,6 +178,7 @@ def get_entities(command, base_class, field_shorts, field_names, field_modifiers
         unpacked = pickle.loads(got_from_redis)
     else:
         unpacked = get_ids_set(base_class, field_names, field_modifiers, params)
+        print(unpacked)
         redis_connection.set(redis_key, pickle.dumps(unpacked))
         write_time_to_redis(redis_key)
     pipe = redis_connection.pipeline()
