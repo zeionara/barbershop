@@ -10,7 +10,7 @@ config.read('C://Users//Zerbs//accounts.sec')
 redis_key_delimiter = "_"
 prefix = "sql"
 time_prefix = "timemong"
-max_lifetime = 10
+max_lifetime = 30
 checking_interval = 5
 executing = True
 

@@ -17,7 +17,7 @@ field_status = (0, 2, 2, 2)
 base_class = holdings.Holding
 session = holdings.session
 
-cms.mark_redis_invalid(base_class)
+#cms.mark_redis_invalid(base_class)
 
 def create(command):
     cms.create(command, base_class, field_shorts, field_names, field_modifiers, session)

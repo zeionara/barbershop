@@ -18,7 +18,13 @@ client = create_db_connection(config["mongo"]["login"], config["mongo"]["passwor
 redis_connection = redis.StrictRedis(host=config['redis']['host'], port=int(config['redis']['port']), db=0)
 
 def write_time_to_redis(key):
-    redis_connection.set(time_prefix + redis_key_delimiter + key, pickle.dumps(datetime.datetime.now()))
+    global time_prefix
+    global redis_key_delimiter
+    str_key = str(key)
+    if (str_key[:2] == "b'"):
+        str_key = str_key[2:-1]
+    print(str_key)
+    redis_connection.set(time_prefix + redis_key_delimiter + str_key, pickle.dumps(datetime.datetime.now()))
 
 def get_date(string_date):
     if (isinstance(string_date,datetime.datetime)):
@@ -215,6 +221,46 @@ def check_universal(params):
             return False
     return True
 
+def revise_redis_keys_update(redis_keys, modified_key_params_before, modified_key_params_after, item_id):
+    for key in redis_keys:
+        current_key_params = str(key)[1:-1].split(redis_key_delimiter)[1:]
+        #print(current_key_params)
+        #print(modified_key_params_before)
+        #print(modified_key_params_after)
+        contained = True
+        for i in range(len(modified_key_params_before)):
+            if (current_key_params[i+1] != "None") and (current_key_params[i+1] != modified_key_params_before[i]):
+                contained = False
+                break
+
+        contains = True
+        for i in range(len(modified_key_params_after)):
+            if (current_key_params[i+1] != "None") and (current_key_params[i+1] != modified_key_params_after[i]):
+                contains = False
+                break
+
+        if contained and not contains:
+            old_list = pickle.loads(redis_connection.get(key))
+            #print(key," +++ ",old_list," --- ",item_id)
+            old_list.remove(item_id)
+            redis_connection.set(key, pickle.dumps(old_list))
+            write_time_to_redis(key)
+        elif not contained and contains:
+            redis_connection.set(key, pickle.dumps(pickle.loads(redis_connection.get(key)) + [item_id]))
+            write_time_to_redis(key)
+
+
+def mark_redis_invalid_after_update_enhanced(base_class, modified_key_params_before_set, modified_key_params_after_set, identifiers, collection_name, field_names):
+    global redis_connection
+    global prefix
+
+
+    #print(modified_key_params_after_set)
+    for i in range(len(modified_key_params_after_set)):
+        redis_keys = redis_connection.scan_iter(collection_name+"*" + redis_key_delimiter + "*" + redis_key_delimiter + "*")
+        #print("revise for ",identifiers[i])
+        revise_redis_keys_update(redis_keys, modified_key_params_before_set[i], modified_key_params_after_set[i], identifiers[i])
+
 def mark_redis_invalid_after_update(base_class, modified_key_params, entities, collection_name, field_names):
     global redis_connection
     global prefix
@@ -279,9 +325,8 @@ def mark_redis_invalid_after_delete(base_class, deleted_items, collection_name, 
     global redis_connection
     global prefix
 
-    redis_keys = redis_connection.scan_iter(collection_name+"*" + redis_key_delimiter + "*" + redis_key_delimiter + "*")
-
     for item in deleted_items:
+        redis_keys = redis_connection.scan_iter(collection_name+"*" + redis_key_delimiter + "*" + redis_key_delimiter + "*")
         redis_connection.delete(collection_name + redis_key_delimiter + str(item._id))
         modified_key_params = get_full_properties_tuple(item, field_names)[1:]
         revise_redis_keys(redis_keys, modified_key_params, False, str(item._id))
@@ -303,6 +348,12 @@ def update(command, base_class, field_shorts, field_names, field_modifiers, sess
     params = get_params(result,["-"+field_short for field_short in field_shorts[1:]])
 
     collection_name = str(base_class).split("'")[1].split(".")[0]
+    modified_key_params_before_set = []
+    modified_key_params_after_set = []
+    identifiers = []
+
+    for item in entities:
+        modified_key_params_before_set.append(get_full_properties_tuple(item, field_names)[1:])
 
     for i in range(len(params)):
         if (params[i] != None):
@@ -310,7 +361,28 @@ def update(command, base_class, field_shorts, field_names, field_modifiers, sess
                 setattr(item, field_names[i + 1], field_modifiers[ i + 1 ](params[i]))
 
     session.flush_all()
-    mark_redis_invalid_after_update(base_class, [str(param) for param in params], entities, collection_name, field_names)
+
+    for item in entities:
+        identifiers.append(str(item._id))
+        modified_key_params_after_set.append(get_full_properties_tuple(item, field_names)[1:])
+
+
+    if not check_universal([str(param) for param in params]):
+        item_keys = []
+        pipe = redis_connection.pipeline()
+        for item in entities:
+            item_id = get_full_properties_tuple(item, field_names)[0]
+            item_key = collection_name + redis_key_delimiter + item_id
+            item_keys.append(item_key)
+            pipe.get(item_key)
+            write_time_to_redis(item_key)
+        item_params_set = pipe.execute()
+        for i in range(len(entities)):
+            if (item_params_set != None):
+                redis_connection.set(item_keys[i], pickle.dumps(get_full_properties_tuple(entities[i], field_names)))
+                write_time_to_redis(item_keys[i])
+
+    mark_redis_invalid_after_update_enhanced(base_class, modified_key_params_before_set, modified_key_params_after_set, identifiers, collection_name, field_names)
     #mark_redis_invalid(base_class)
 
 def create(command, base_class, field_shorts, field_names, field_modifiers, session):
@@ -327,6 +399,9 @@ def create(command, base_class, field_shorts, field_names, field_modifiers, sess
 
     new_object = base_class(**args)
     session.flush_all()
+
+    item_key = collection_name + redis_key_delimiter + str(new_object._id)
+    redis_connection.set(item_key, pickle.dumps(get_full_properties_tuple(new_object, field_names)))
 
     mark_redis_invalid_after_create(base_class, params, collection_name, field_names, str(new_object._id))
     return new_object
